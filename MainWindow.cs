@@ -21,7 +21,7 @@ namespace TuxDDS
             
             // Set a debug message for the status bar
             var statusBarContextId = sbApplicationStatus.GetContextId("main");
-            sbApplicationStatus.Push(statusBarContextId, "DEBUG");
+            sbApplicationStatus.Push(statusBarContextId, "No status.");
         }
 
         private void Window_DeleteEvent(object sender, DeleteEventArgs a)

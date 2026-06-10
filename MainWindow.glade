@@ -11,13 +11,14 @@
       <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="valign">start</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
         <property name="orientation">vertical</property>
-        <property name="homogeneous">False</property>
         <child>
           <object class="GtkMenuBar" id="mbApplicationMenuBar">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="valign">start</property>
             <child>
               <object class="GtkMenuItem">
                 <property name="visible">True</property>
@@ -172,14 +173,18 @@
           </packing>
         </child>
         <child>
-          <object class="GtkImage" id="imgShownImage">
+          <object class="GtkLabel" id="lblNoImage">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="icon_size">6</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="label">No image loaded.</property>
+            <property name="justify">center</property>
           </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
+            <property name="padding">100</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -187,6 +192,7 @@
           <object class="GtkStatusbar" id="sbApplicationStatus">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="valign">end</property>
             <property name="margin-left">10</property>
             <property name="margin-right">10</property>
             <property name="margin-start">10</property>
