@@ -1,5 +1,3 @@
-using System;
-using Cairo;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
 
