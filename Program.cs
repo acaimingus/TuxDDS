@@ -10,7 +10,7 @@ namespace TuxDDS
         {
             Application.Init();
 
-            var app = new Application("org.TuxDDS.TuxDDS", GLib.ApplicationFlags.None);
+            var app = new Application("io.github.acaimingus.TuxDDS", GLib.ApplicationFlags.None);
             app.Register(GLib.Cancellable.Current);
 
             var win = new Gui();
