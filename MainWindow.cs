@@ -1,16 +1,14 @@
 using System;
+using Cairo;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
 
 namespace TuxDDS
 {
-    class MainWindow : Window
+    internal class MainWindow : Window
     {
-        [UI] private Label _label1 = null;
-        [UI] private Button _button1 = null;
-
-        private int _counter;
-
+        [UI] private Statusbar sbApplicationStatus;
+        
         public MainWindow() : this(new Builder("MainWindow.glade"))
         {
         }
@@ -20,6 +18,10 @@ namespace TuxDDS
             builder.Autoconnect(this);
 
             DeleteEvent += Window_DeleteEvent;
+            
+            // Set a debug message for the status bar
+            var statusBarContextId = sbApplicationStatus.GetContextId("main");
+            sbApplicationStatus.Push(statusBarContextId, "DEBUG");
         }
 
         private void Window_DeleteEvent(object sender, DeleteEventArgs a)
