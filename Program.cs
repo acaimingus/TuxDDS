@@ -13,7 +13,7 @@ namespace TuxDDS
             var app = new Application("org.TuxDDS.TuxDDS", GLib.ApplicationFlags.None);
             app.Register(GLib.Cancellable.Current);
 
-            var win = new MainWindow();
+            var win = new Gui();
             app.AddWindow(win);
 
             win.Show();

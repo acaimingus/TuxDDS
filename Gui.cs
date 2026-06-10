@@ -5,15 +5,15 @@ using UI = Gtk.Builder.ObjectAttribute;
 
 namespace TuxDDS
 {
-    internal class MainWindow : Window
+    internal class Gui : Window
     {
         [UI] private Statusbar sbApplicationStatus;
         
-        public MainWindow() : this(new Builder("MainWindow.glade"))
+        public Gui() : this(new Builder("Gui.glade"))
         {
         }
 
-        private MainWindow(Builder builder) : base(builder.GetRawOwnedObject("MainWindow"))
+        private Gui(Builder builder) : base(builder.GetRawOwnedObject("Gui"))
         {
             builder.Autoconnect(this);
 
