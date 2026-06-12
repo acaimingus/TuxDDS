@@ -23,6 +23,16 @@ cd vcpkg
 ./vcpkg install directxtex:x64-linux-dynamic
 ```
 
+## Install Magic Enum
+
+Sadly, DirectXTex does not offer a method for getting file format names. It only returns a number that has to be resolved.
+To reduce the amount of needed effort to maintain a list of DDS format names I'm just not gonna bother and use static reflection.
+However C++ does not support static reflection by default, so magic-enum must be installed to get the enum names.
+
+```
+./vcpkg install magic-enum:x64-linux-dynamic
+```
+
 ## Change into the TuxDDS DirectXWrapper directory
 
 ```
