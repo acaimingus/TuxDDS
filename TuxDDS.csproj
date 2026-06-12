@@ -10,10 +10,17 @@
         <EmbeddedResource Include="**\*.glade">
             <LogicalName>%(Filename)%(Extension)</LogicalName>
         </EmbeddedResource>
+        <None Update="lib\libDirectXTexWrapper.so">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="GtkSharp" Version="3.24.24.*"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="lib\" />
     </ItemGroup>
 
 </Project>
