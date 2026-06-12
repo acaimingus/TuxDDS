@@ -1,8 +1,15 @@
-bin/
+# Exclude C/C++ build artifacts
 lib/
 include/
+build/
+
+# Exclude C# build artifacts
+bin/
 obj/
+
+# Exclude editor config files
 .idea/
+.vscode/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
