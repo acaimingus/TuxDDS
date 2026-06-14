@@ -28,9 +28,7 @@ extern "C" {
             auto formatName = magic_enum::enum_name(metadata.format);
             strncpy(outImageFormat, formatName.data(), bufferSize - 1);
             outImageFormat[bufferSize - 1] = '\0';
-
-            outImageFormat = "DEBUG";
-
+            
             // Successfully finished
             return 0;
         }

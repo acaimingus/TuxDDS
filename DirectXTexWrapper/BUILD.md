@@ -6,20 +6,20 @@ this directory.
 
 ## Download vcpkg
 
-```
-git clone <https://github.com/microsoft/vcpkg/>
+```bash
+git clone https://github.com/microsoft/vcpkg/
 cd vcpkg
 ```
 
 ## Bootstrap vcpkg
 
-```
+```bash
 ./bootstrap-vcpkg.sh -disableMetrics
 ```
 
 ## Install DirectXTex
 
-```
+```bash
 ./vcpkg install directxtex:x64-linux-dynamic
 ```
 
@@ -29,26 +29,26 @@ Sadly, DirectXTex does not offer a method for getting file format names. It only
 To reduce the amount of needed effort to maintain a list of DDS format names I'm just not gonna bother and use static reflection.
 However C++ does not support static reflection by default, so magic-enum must be installed to get the enum names.
 
-```
+```bash
 ./vcpkg install magic-enum:x64-linux-dynamic
 ```
 
 ## Change into the TuxDDS DirectXWrapper directory
 
-```
+```bash
 cd ../TuxDDS/DirectXTexWrapper
 ```
 
 ## Build with CMake
 
-```
+```bash
 cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$HOME/source/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux-dynamic
 cmake --build build
 ```
 
 ## Copy the build output to the lib folder of the root project directory
 
-```
+```bash
 cp build/libDirectXTexWrapper.so ../lib
 ```
 
