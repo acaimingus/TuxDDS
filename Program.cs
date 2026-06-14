@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using Cairo;
 using Gtk;
 
 namespace TuxDDS
@@ -13,12 +12,12 @@ namespace TuxDDS
         public static void Main()
         {
             // Load the wrapper library
-            NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), (libraryName, assembly, path) =>
+            NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), (libraryName, _, _) =>
             {
                 if (libraryName == "DirectXTexWrapper")
                 {
                     var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                    var libraryPath = System.IO.Path.Combine(baseDirectory, "lib", "libDirectXTexWrapper.so");
+                    var libraryPath = Path.Combine(baseDirectory, "lib", "libDirectXTexWrapper.so");
 
                     if (File.Exists(libraryPath))
                     {
