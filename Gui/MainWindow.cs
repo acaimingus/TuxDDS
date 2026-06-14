@@ -1,12 +1,18 @@
 using System;
+using Gdk;
 using Gtk;
+using TuxDDS.Dds;
 using UI = Gtk.Builder.ObjectAttribute;
+using Window = Gtk.Window;
 
 namespace TuxDDS.Gui
 {
     public class MainWindow : Window
     {
         [UI] private Statusbar sbApplicationStatus;
+        [UI] private Stack stkWindowContent;
+        [UI] private Image imgDdsTexture;
+        
         private readonly uint _statusBarContextId;
         
         private MainWindowController _controller;
@@ -38,7 +44,15 @@ namespace TuxDDS.Gui
 
         private void OnMenuBarOpenOptionClicked(object sender, EventArgs args)
         {
-            _controller.OpenDdsImage(UpdateApplicationStatus);
+            _controller.OpenDdsImage(UpdateApplicationStatus, DisplayDdsImage);
+        }
+        
+        private void DisplayDdsImage(Pixbuf pixbuf)
+        {
+            // Switch the Stack to display the imageView
+            stkWindowContent.VisibleChild = imgDdsTexture;
+            // Create the image in the image view
+            imgDdsTexture.Pixbuf = pixbuf;
         }
     }
 }

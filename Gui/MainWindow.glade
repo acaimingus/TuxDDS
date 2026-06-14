@@ -66,18 +66,39 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="lblNoImage">
+          <object class="GtkStack" id="stkWindowContent">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="hexpand">True</property>
-            <property name="vexpand">True</property>
-            <property name="label">No image loaded.</property>
-            <property name="justify">center</property>
+            <child>
+              <object class="GtkLabel" id="lblNoImage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="label">No image loaded.</property>
+                <property name="justify">center</property>
+              </object>
+              <packing>
+                <property name="name">page0</property>
+                <property name="title" translatable="yes">page0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkImage" id="imgDdsTexture">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="stock">gtk-missing-image</property>
+              </object>
+              <packing>
+                <property name="name">page1</property>
+                <property name="title" translatable="yes">page1</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
           </object>
           <packing>
-            <property name="expand">True</property>
+            <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="padding">100</property>
             <property name="position">1</property>
           </packing>
         </child>
