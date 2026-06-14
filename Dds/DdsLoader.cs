@@ -9,7 +9,7 @@ public static class DdsLoader
 {
     [DllImport("DirectXTexWrapper", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     private static extern int ExtractDdsTextureInfo(string filePath, out int width, out int height,
-        StringBuilder format);
+        StringBuilder format, out int bytesPerPixel);
 
     [DllImport("DirectXTexWrapper", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     private static extern int ExtractDdsTextureData(string filePath, int bufferSize, byte[] imageData);
@@ -24,7 +24,8 @@ public static class DdsLoader
         }
 
         var formatName = new StringBuilder(64);
-        var errorCodeInfo = ExtractDdsTextureInfo(filePath, out var width, out var height, formatName);
+        var errorCodeInfo =
+            ExtractDdsTextureInfo(filePath, out var width, out var height, formatName, out var bytesPerPixel);
         if (errorCodeInfo != 0)
         {
             statusCallback?.Invoke($"Extracting DDS file data failed with error code {errorCodeInfo}");
@@ -32,11 +33,10 @@ public static class DdsLoader
         }
 
         statusCallback?.Invoke(
-            $"Image loaded successfully! Size: {width} x {height} px / Format: {formatName}");
+            $"Image loaded successfully! Size: {width} x {height} px / Format: {formatName}, {bytesPerPixel} Bytes per Pixel");
 
         // Create a buffer to fit the image
-        // TODO: Instead of assuming width * height * 4, create a safer solution
-        var imageData = new byte[width * height * 4];
+        var imageData = new byte[width * height * bytesPerPixel];
 
         // Extract the image data
         var errorCodeData = ExtractDdsTextureData(filePath, imageData.Length, imageData);
@@ -45,14 +45,16 @@ public static class DdsLoader
             statusCallback?.Invoke($"Extracting DDS data failed with error code {errorCodeData}");
             return null;
         }
-        
+
         // Return the data object
-        return new DdsTexture { 
+        return new DdsTexture
+        {
             FileName = filePath,
             Path = filePath,
             Width = width,
             Height = height,
             ImageFormat = formatName.ToString(),
+            BytesPerPixel = bytesPerPixel,
             ImageData = imageData,
         };
     }
