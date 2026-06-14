@@ -54,7 +54,7 @@ namespace TuxDDS
             if (fileChooserDialog.Run() == (int)ResponseType.Accept)
             {
                 _loadedDdsImage = fileChooserDialog.Filename;
-                // Load the DDS file here
+                DdsLoader.LoadDdsTexture(_loadedDdsImage, UpdateApplicationStatus);
             }
         }
     }

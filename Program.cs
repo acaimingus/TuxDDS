@@ -7,7 +7,7 @@ using Gtk;
 
 namespace TuxDDS
 {
-    class Program
+    internal static class Program
     {
         [STAThread]
         public static void Main(string[] args)
@@ -27,8 +27,6 @@ namespace TuxDDS
                 }
                 return IntPtr.Zero;
             });
-
-            DdsLoader.LoadDdsTexture();
             
             Application.Init();
 
