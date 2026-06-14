@@ -6,7 +6,7 @@ namespace TuxDDS
 {
     internal class Gui : Window
     {
-        [UI] private Statusbar _sbApplicationStatus;
+        [UI] private Statusbar sbApplicationStatus;
         private uint _statusBarContextId;
         
         private string loadedDdsImage = null;
@@ -20,7 +20,7 @@ namespace TuxDDS
             DeleteEvent += Window_DeleteEvent;
 
             // Set a debug message for the status bar
-            _statusBarContextId = _sbApplicationStatus.GetContextId("main");
+            _statusBarContextId = sbApplicationStatus.GetContextId("main");
             UpdateApplicationStatus("No status.");
         }
 
@@ -31,7 +31,7 @@ namespace TuxDDS
 
         private void UpdateApplicationStatus(string message)
         {
-            _sbApplicationStatus.Push(_statusBarContextId, message);
+            bApplicationStatus.Push(statusBarContextId, message);
         }
 
         private void OpenDdsImage(object sender, EventArgs args)
