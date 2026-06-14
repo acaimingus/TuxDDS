@@ -10,7 +10,7 @@ namespace TuxDDS
     internal static class Program
     {
         [STAThread]
-        public static void Main(string[] args)
+        public static void Main()
         {
             // Load the wrapper library
             NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), (libraryName, assembly, path) =>
