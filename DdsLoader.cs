@@ -32,7 +32,7 @@ public static class DdsLoader
         }
 
         statusCallback?.Invoke(
-            $"Image loaded successfully! Size: {width} x {height} px / Format: {formatName.ToString()}");
+            $"Image loaded successfully! Size: {width} x {height} px / Format: {formatName}");
 
         // Create a buffer to fit the image
         // TODO: Instead of assuming width * height * 4, create a safer solution
