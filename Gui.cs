@@ -9,7 +9,7 @@ namespace TuxDDS
         [UI] private Statusbar sbApplicationStatus;
         private uint _statusBarContextId;
         
-        private string loadedDdsImage = null;
+        private string _loadedDdsImage = null;
         
         public Gui() : this(new Builder("Gui.glade")) {}
 
@@ -31,7 +31,7 @@ namespace TuxDDS
 
         private void UpdateApplicationStatus(string message)
         {
-            bApplicationStatus.Push(statusBarContextId, message);
+            sbApplicationStatus.Push(_statusBarContextId, message);
         }
 
         private void OpenDdsImage(object sender, EventArgs args)
@@ -53,7 +53,7 @@ namespace TuxDDS
             // Show the dialog
             if (fileChooserDialog.Run() == (int)ResponseType.Accept)
             {
-                loadedDdsImage = fileChooserDialog.Filename;
+                _loadedDdsImage = fileChooserDialog.Filename;
                 // Load the DDS file here
             }
         }
