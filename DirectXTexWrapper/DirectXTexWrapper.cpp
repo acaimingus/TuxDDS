@@ -52,11 +52,13 @@ extern "C" {
 
             const DirectX::Image* ddsImage = nullptr;
 
+            // Create the scratch image for the decompressed image
+            DirectX::ScratchImage decompressedImage;
+
             // Check if the image is compressed
             if (DirectX::IsCompressed(metadata.format))
             {
                 // Decompress the image
-                DirectX::ScratchImage decompressedImage;
                 HRESULT hr2 = DirectX::Decompress(compressedImage.GetImages(), compressedImage.GetImageCount(), metadata, DXGI_FORMAT_R8G8B8A8_UNORM, decompressedImage);
                 if (FAILED(hr2))
                 {
