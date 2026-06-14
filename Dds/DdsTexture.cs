@@ -1,4 +1,4 @@
-namespace TuxDDS;
+namespace TuxDDS.Dds;
 
 /// <summary>
 /// Description class for all the information needed about the DDS texture

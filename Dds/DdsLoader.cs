@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace TuxDDS;
+namespace TuxDDS.Dds;
 
 public static class DdsLoader
 {

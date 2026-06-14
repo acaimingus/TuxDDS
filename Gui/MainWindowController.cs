@@ -1,11 +1,12 @@
 using System;
 using Gtk;
+using TuxDDS.Dds;
 
-namespace TuxDDS;
+namespace TuxDDS.Gui;
 
-public class GuiController(Gui gui)
+public class MainWindowController(MainWindow mainWindow)
 {
-    private Gui _gui = gui;
+    private MainWindow _mainWindow = mainWindow;
     private DdsTexture _loadedDdsImageTexture = null;
 
     public void OpenDdsImage(Action<string> statusCallback)
@@ -13,7 +14,7 @@ public class GuiController(Gui gui)
         // Create a file chooser dialog
         using var fileChooserDialog = new FileChooserDialog(
             "Select a DDS Image",
-            _gui,
+            _mainWindow,
             FileChooserAction.Open,
             "Cancel", ResponseType.Cancel,
             "Open", ResponseType.Accept);

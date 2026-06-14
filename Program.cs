@@ -32,7 +32,7 @@ namespace TuxDDS
             var app = new Application("io.github.acaimingus.TuxDDS", GLib.ApplicationFlags.None);
             app.Register(GLib.Cancellable.Current);
 
-            var win = new Gui();
+            var win = new Gui.MainWindow();
             app.AddWindow(win);
 
             win.Show();

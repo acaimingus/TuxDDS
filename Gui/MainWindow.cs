@@ -2,21 +2,21 @@ using System;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
 
-namespace TuxDDS
+namespace TuxDDS.Gui
 {
-    public class Gui : Window
+    public class MainWindow : Window
     {
         [UI] private Statusbar sbApplicationStatus;
         private readonly uint _statusBarContextId;
         
-        private GuiController _controller;
+        private MainWindowController _controller;
 
-        public Gui() : this(new Builder("Gui.glade")) {}
+        public MainWindow() : this(new Builder("MainWindow.glade")) {}
 
-        private Gui(Builder builder) : base(builder.GetRawOwnedObject("Gui"))
+        private MainWindow(Builder builder) : base(builder.GetRawOwnedObject("MainWindow"))
         {
             // Create a controller for this GUI
-            _controller =  new GuiController(this);
+            _controller =  new MainWindowController(this);
             builder.Autoconnect(this);
             
             DeleteEvent += Window_DeleteEvent;
