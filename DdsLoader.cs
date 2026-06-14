@@ -14,13 +14,13 @@ public static class DdsLoader
     [DllImport("DirectXTexWrapper", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     private static extern int ExtractDdsTextureData(string filePath, int bufferSize, byte[] imageData);
 
-    public static void LoadDdsTexture(string filePath, Action<string> statusCallback)
+    public static DdsTexture LoadDdsTexture(string filePath, Action<string> statusCallback)
     {
         // Check if the provided file path even exists
         if (!File.Exists(filePath))
         {
             statusCallback?.Invoke($"The specified file was not found: {filePath}");
-            return;
+            return null;
         }
 
         var formatName = new StringBuilder(64);
@@ -28,7 +28,7 @@ public static class DdsLoader
         if (errorCodeInfo != 0)
         {
             statusCallback?.Invoke($"Extracting DDS file data failed with error code {errorCodeInfo}");
-            return;
+            return null;
         }
 
         statusCallback?.Invoke(
@@ -43,9 +43,17 @@ public static class DdsLoader
         if (errorCodeData != 0)
         {
             statusCallback?.Invoke($"Extracting DDS data failed with error code {errorCodeData}");
-            return;
+            return null;
         }
-
-        // Pass the data to the UI
+        
+        // Return the data object
+        return new DdsTexture { 
+            FileName = filePath,
+            Path = filePath,
+            Width = width,
+            Height = height,
+            ImageFormat = formatName.ToString(),
+            ImageData = imageData,
+        };
     }
 }

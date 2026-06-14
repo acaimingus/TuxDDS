@@ -7,9 +7,9 @@ namespace TuxDDS
     internal class Gui : Window
     {
         [UI] private Statusbar sbApplicationStatus;
-        private uint _statusBarContextId;
+        private readonly uint _statusBarContextId;
         
-        private string _loadedDdsImage = null;
+        private DdsTexture _loadedDdsImageTexture = null;
         
         public Gui() : this(new Builder("Gui.glade")) {}
 
@@ -53,8 +53,8 @@ namespace TuxDDS
             // Show the dialog
             if (fileChooserDialog.Run() == (int)ResponseType.Accept)
             {
-                _loadedDdsImage = fileChooserDialog.Filename;
-                DdsLoader.LoadDdsTexture(_loadedDdsImage, UpdateApplicationStatus);
+                // Load the specified image texture
+                _loadedDdsImageTexture = DdsLoader.LoadDdsTexture(fileChooserDialog.Filename, UpdateApplicationStatus);
             }
         }
     }
