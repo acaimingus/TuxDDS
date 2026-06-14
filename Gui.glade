@@ -25,7 +25,7 @@
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">_Open</property>
                 <property name="use-underline">True</property>
-                <signal name="activate" handler="OpenDdsImage" swapped="no"/>
+                <signal name="activate" handler="OnMenuBarOpenOptionClicked" swapped="no"/>
               </object>
             </child>
             <child>
