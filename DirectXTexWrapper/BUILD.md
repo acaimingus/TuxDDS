@@ -49,6 +49,7 @@ cmake --build build
 ## Copy the build output to the lib folder of the root project directory
 
 ```bash
+mkdir ../lib
 cp build/libDirectXTexWrapper.so ../lib
 ```
 
