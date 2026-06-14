@@ -28,7 +28,7 @@ public static class DdsLoader
             ExtractDdsTextureInfo(filePath, out var width, out var height, formatName, out var bytesPerPixel);
         if (errorCodeInfo != 0)
         {
-            statusCallback?.Invoke($"Extracting DDS file data failed with error code {errorCodeInfo}");
+            statusCallback?.Invoke($"Extracting DDS file data failed with HRESULT {errorCodeInfo}");
             return null;
         }
 
@@ -42,7 +42,7 @@ public static class DdsLoader
         var errorCodeData = ExtractDdsTextureData(filePath, imageData.Length, imageData);
         if (errorCodeData != 0)
         {
-            statusCallback?.Invoke($"Extracting DDS data failed with error code {errorCodeData}");
+            statusCallback?.Invoke($"Extracting DDS data failed with HRESULT {errorCodeData}");
             return null;
         }
 
