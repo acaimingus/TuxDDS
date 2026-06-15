@@ -5,7 +5,7 @@
 #define EXPORT __attribute__((visibility("default")))
 
 extern "C" {
-    EXPORT int ExtractDdsTextureInfo(const char* filePath, int* outWidth, int* outHeight, char* outImageFormat, int* outBytesPerPixel)
+    EXPORT int ExtractDdsTextureInfo(const char* filePath, int* outWidth, int* outHeight, char* outImageFormat, int* outBitsPerPixel, int* outBitsPerColor)
     {
         // Create the needed objects for loading the DDS file
         DirectX::ScratchImage image;
@@ -29,15 +29,16 @@ extern "C" {
             strncpy(outImageFormat, formatName.data(), bufferSize - 1);
             outImageFormat[bufferSize - 1] = '\0';
             
-            // Extract the amount of bytes needed per pixel
+            // Extract the amount of bits needed per pixel and per color channel
             if (DirectX::IsCompressed(metadata.format))
             {
-                *outBytesPerPixel = 4;
+                *outBitsPerPixel = 32;
+                *outBitsPerColor = 8;
             }
             else
             {
-                size_t bitsPerPixel = DirectX::BitsPerPixel(metadata.format);
-                *outBytesPerPixel = static_cast<int>(bitsPerPixel / 8);
+                *outBitsPerPixel = static_cast<int>(DirectX::BitsPerPixel(metadata.format));
+                *outBitsPerColor = static_cast<int>(DirectX::BitsPerColor(metadata.format));
             }
 
             // Successfully finished

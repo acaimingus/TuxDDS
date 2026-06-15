@@ -26,9 +26,13 @@ public class DdsTexture
     /// </summary>
     public string ImageFormat { get; init; }
     /// <summary>
-    /// The amount of bytes needed per pixel for the image format
+    /// The amount of bits needed per pixel for the image format
     /// </summary>
-    public int BytesPerPixel { get; init; }
+    public int BitsPerPixel { get; init; }
+    /// <summary>
+    /// The amount of bits needed per color channel for the image format
+    /// </summary>
+    public int BitsPerColor { get; init; }
     /// <summary>
     /// The RGBA array of the DDS image data
     /// </summary>

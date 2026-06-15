@@ -9,7 +9,7 @@ public static class DdsLoader
 {
     [DllImport("DirectXTexWrapper", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     private static extern int ExtractDdsTextureInfo(string filePath, out int width, out int height,
-        StringBuilder format, out int bytesPerPixel);
+        StringBuilder format, out int bitsPerPixel, out int bitsPerColor);
 
     [DllImport("DirectXTexWrapper", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     private static extern int ExtractDdsTextureData(string filePath, int bufferSize, byte[] imageData);
@@ -25,7 +25,7 @@ public static class DdsLoader
 
         var formatName = new StringBuilder(64);
         var errorCodeInfo =
-            ExtractDdsTextureInfo(filePath, out var width, out var height, formatName, out var bytesPerPixel);
+            ExtractDdsTextureInfo(filePath, out var width, out var height, formatName, out var bitsPerPixel, out var bitsPerColor);
         if (errorCodeInfo != 0)
         {
             statusCallback?.Invoke($"Extracting DDS file data failed with HRESULT {errorCodeInfo}");
@@ -33,9 +33,10 @@ public static class DdsLoader
         }
 
         statusCallback?.Invoke(
-            $"Image loaded successfully! Size: {width} x {height} px / Format: {formatName}, {bytesPerPixel} Bytes per Pixel");
+            $"Image loaded successfully! Size: {width} x {height} px / Format: {formatName}, {bitsPerPixel} Bits per Pixel, {bitsPerColor} Bits per Color");
 
         // Create a buffer to fit the image
+        var bytesPerPixel = (int)Math.Ceiling((double)bitsPerPixel / 8);
         var imageData = new byte[width * height * bytesPerPixel];
 
         // Extract the image data
@@ -54,7 +55,8 @@ public static class DdsLoader
             Width = width,
             Height = height,
             ImageFormat = formatName.ToString(),
-            BytesPerPixel = bytesPerPixel,
+            BitsPerPixel = bitsPerPixel,
+            BitsPerColor = bitsPerColor,
             ImageData = imageData,
         };
     }
