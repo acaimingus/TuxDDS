@@ -14,12 +14,12 @@ public static class DdsLoader
     [DllImport("DirectXTexWrapper", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     private static extern int ExtractDdsTextureData(string filePath, int bufferSize, byte[] imageData);
 
-    public static DdsTexture LoadDdsTexture(string filePath, Action<string> statusCallback)
+    public static DdsTexture? LoadDdsTexture(string filePath, Action<string> statusCallback)
     {
         // Check if the provided file path even exists
         if (!File.Exists(filePath))
         {
-            statusCallback?.Invoke($"The specified file was not found: {filePath}");
+            statusCallback.Invoke($"The specified file was not found: {filePath}");
             return null;
         }
 
@@ -28,11 +28,11 @@ public static class DdsLoader
             ExtractDdsTextureInfo(filePath, out var width, out var height, formatName, out var bitsPerPixel, out var bitsPerColor);
         if (errorCodeInfo != 0)
         {
-            statusCallback?.Invoke($"Extracting DDS file data failed with HRESULT {errorCodeInfo}");
+            statusCallback.Invoke($"Extracting DDS file data failed with HRESULT {errorCodeInfo}");
             return null;
         }
 
-        statusCallback?.Invoke(
+        statusCallback.Invoke(
             $"Image loaded successfully! Size: {width} x {height} px / Format: {formatName}, {bitsPerPixel} Bits per Pixel, {bitsPerColor} Bits per Color");
 
         // Create a buffer to fit the image
@@ -43,7 +43,7 @@ public static class DdsLoader
         var errorCodeData = ExtractDdsTextureData(filePath, imageData.Length, imageData);
         if (errorCodeData != 0)
         {
-            statusCallback?.Invoke($"Extracting DDS data failed with HRESULT {errorCodeData}");
+            statusCallback.Invoke($"Extracting DDS data failed with HRESULT {errorCodeData}");
             return null;
         }
 
