@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="240"
+        x:Class="TuxDDS.MainWindow"
+        Title="TuxDDS"
+        Width="480" Height="240">
+
+    <DockPanel>
+        
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Open" Name="MiOpenDdsImage" Click="OnMiOpenDdsImageClick"/>
+            <MenuItem Header="_Export">
+                <MenuItem Header="_PNG"/>
+            </MenuItem>
+            <MenuItem Header="_About"/>
+        </Menu>
+
+        <Border DockPanel.Dock="Bottom" Padding="10,6">
+            <TextBlock Name="SbApplicationStatus" Text="No status."/>
+        </Border>
+
+        <Panel Name="StkWindowContent">
+            
+            <TextBlock Name="LblNoImage" 
+                       Text="No image loaded." 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center"/>
+            
+            <Image Name="ImgDdsTexture" 
+                   IsVisible="False" 
+                   HorizontalAlignment="Stretch" 
+                   VerticalAlignment="Stretch"/>
+                   
+        </Panel>
+    </DockPanel>
+</Window>

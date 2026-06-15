@@ -1,42 +1,24 @@
+﻿using Avalonia;
 using System;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using Gtk;
 
-namespace TuxDDS
+namespace TuxDDS;
+
+class Program
 {
-    internal static class Program
-    {
-        [STAThread]
-        public static void Main()
-        {
-            // Load the wrapper library
-            NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), (libraryName, _, _) =>
-            {
-                if (libraryName == "DirectXTexWrapper")
-                {
-                    var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                    var libraryPath = Path.Combine(baseDirectory, "lib", "libDirectXTexWrapper.so");
+    // Initialization code. Don't use any Avalonia, third-party APIs or any
+    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
+    // yet and stuff might break.
+    [STAThread]
+    public static void Main(string[] args) => BuildAvaloniaApp()
+        .StartWithClassicDesktopLifetime(args);
 
-                    if (File.Exists(libraryPath))
-                    {
-                        return NativeLibrary.Load(libraryPath);
-                    }
-                }
-                return IntPtr.Zero;
-            });
-            
-            Application.Init();
-
-            var app = new Application("io.github.acaimingus.TuxDDS", GLib.ApplicationFlags.None);
-            app.Register(GLib.Cancellable.Current);
-
-            var win = new Gui.MainWindow();
-            app.AddWindow(win);
-
-            win.Show();
-            Application.Run();
-        }
-    }
+    // Avalonia configuration, don't remove; also used by visual designer.
+    public static AppBuilder BuildAvaloniaApp()
+        => AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+#if DEBUG
+            .WithDeveloperTools()
+#endif
+            .WithInterFont()
+            .LogToTrace();
 }
