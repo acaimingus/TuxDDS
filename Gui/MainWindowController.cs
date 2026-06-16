@@ -49,15 +49,15 @@ public class MainWindowController(MainWindow mainWindow)
 
             // Create a WriteableBitmap for the DDS texture
             var writeableBitmap = new WriteableBitmap(
-                new PixelSize(_loadedDdsImageTexture.Width, _loadedDdsImageTexture.Height),
+                new PixelSize(_loadedDdsImageTexture!.Width, _loadedDdsImageTexture!.Height),
                 new Vector(96, 96),
                 PixelFormat.Rgba8888,
                 AlphaFormat.Unpremul);
 
             using (var lockedFrameBuffer = writeableBitmap.Lock())
             {
-                Marshal.Copy(_loadedDdsImageTexture.ImageData, 0, lockedFrameBuffer.Address,
-                    _loadedDdsImageTexture.ImageData.Length);
+                Marshal.Copy(_loadedDdsImageTexture.PreviewImageData, 0, lockedFrameBuffer.Address,
+                    _loadedDdsImageTexture.PreviewImageData.Length);
             }
 
             // Use the display callback to display the image
