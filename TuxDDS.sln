@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuxDDS", "TuxDDS.csproj", "{D7F586F7-792B-4354-9C5E-E56A97A885A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuxDDS", "Source/TuxDDS.csproj", "{D7F586F7-792B-4354-9C5E-E56A97A885A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuxDDSTest", "TuxDDSTest\TuxDDSTest.csproj", "{AE065565-DF51-453B-A55F-1120A103E9E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +14,9 @@ Global
 		{D7F586F7-792B-4354-9C5E-E56A97A885A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7F586F7-792B-4354-9C5E-E56A97A885A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7F586F7-792B-4354-9C5E-E56A97A885A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE065565-DF51-453B-A55F-1120A103E9E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE065565-DF51-453B-A55F-1120A103E9E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE065565-DF51-453B-A55F-1120A103E9E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE065565-DF51-453B-A55F-1120A103E9E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
