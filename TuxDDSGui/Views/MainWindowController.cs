@@ -8,7 +8,7 @@ using Avalonia.Platform;
 using Avalonia.Platform.Storage;
 using TuxDDSLib.Dds;
 
-namespace TuxDDS.Gui;
+namespace TuxDDS.Views;
 
 public class MainWindowController(MainWindow mainWindow)
 {
