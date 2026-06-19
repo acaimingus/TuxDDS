@@ -11,7 +11,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_Open" Name="MiOpenDdsImage" Click="OnMiOpenDdsImageClick" />
             <MenuItem Header="_Export">
-                <MenuItem Header="_PNG" />
+                <MenuItem Header="_PNG" Name="MiExportToPng" Click="OnMiExportToPngClick" />
             </MenuItem>
             <MenuItem Header="_About" />
         </Menu>

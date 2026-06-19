@@ -84,4 +84,9 @@ public partial class MainWindow : Window
             UpdateApplicationStatus($"FATAL EXCEPTION: {exception.Message}");
         }
     }
+
+    private void OnMiExportToPngClick(object? sender, RoutedEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
 }

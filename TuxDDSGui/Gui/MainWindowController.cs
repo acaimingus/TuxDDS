@@ -6,14 +6,15 @@ using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Platform.Storage;
-using TuxDDS.Dds;
+using TuxDDSLib.Dds;
 
 namespace TuxDDS.Gui;
 
 public class MainWindowController(MainWindow mainWindow)
 {
     private DdsTexture? _loadedDdsImageTexture;
-
+    
+    
     public async Task OpenDdsImage(Action<string> statusCallback, Action<WriteableBitmap> displayCallback, Action<string> titleCallback)
     {
         // Create a file chooser dialog
