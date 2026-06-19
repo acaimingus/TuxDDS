@@ -48,11 +48,11 @@ public static class DdsLoader
             statusCallback.Invoke($"Extracting DDS data failed with HRESULT {errorCodeData}");
             return null;
         }
-
+        
         // Return the data object
         return new DdsTexture
         {
-            FileName = filePath,
+            FileName = Path.GetFileName(filePath),
             Path = filePath,
             Width = width,
             Height = height,
