@@ -8,31 +8,38 @@
         Width="480" Height="240">
 
     <DockPanel>
-        
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_Open" Name="MiOpenDdsImage" Click="OnMiOpenDdsImageClick"/>
+            <MenuItem Header="_Open" Name="MiOpenDdsImage" Click="OnMiOpenDdsImageClick" />
             <MenuItem Header="_Export">
-                <MenuItem Header="_PNG"/>
+                <MenuItem Header="_PNG" />
             </MenuItem>
-            <MenuItem Header="_About"/>
+            <MenuItem Header="_About" />
         </Menu>
-
         <Border DockPanel.Dock="Bottom" Padding="10,6">
-            <TextBlock Name="SbApplicationStatus" Text="No status."/>
+            <TextBlock Name="SbApplicationStatus" Text="No status." />
         </Border>
-
         <Panel Name="StkWindowContent">
-            
-            <TextBlock Name="LblNoImage" 
-                       Text="No image loaded." 
-                       HorizontalAlignment="Center" 
-                       VerticalAlignment="Center"/>
-            
-            <Image Name="ImgDdsTexture" 
-                   IsVisible="False" 
-                   HorizontalAlignment="Stretch" 
-                   VerticalAlignment="Stretch"/>
-                   
+            <TextBlock Name="LblNoImage"
+                       Text="No image loaded."
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+            <Border BorderBrush="Gray" BorderThickness="1">
+                <Border.Background>
+                    <DrawingBrush TileMode="Tile" DestinationRect="0,0,20,20">
+                        <DrawingBrush.Drawing>
+                            <DrawingGroup>
+                                <GeometryDrawing Brush="#E5E5E5" Geometry="M 0,0 L 20,0 L 20,20 L 0,20 Z" />
+                                <GeometryDrawing Brush="#B3B3B3" Geometry="M 0,0 L 10,0 L 10,10 L 0,10 Z" />
+                                <GeometryDrawing Brush="#B3B3B3" Geometry="M 10,10 L 20,10 L 20,20 L 10,20 Z" />
+                            </DrawingGroup>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Border.Background>
+                <Image Name="ImgDdsTexture"
+                       IsVisible="False"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch" />
+            </Border>
         </Panel>
     </DockPanel>
 </Window>
