@@ -23,7 +23,7 @@
                        Text="No image loaded."
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center" />
-            <Border BorderBrush="Gray" BorderThickness="1">
+            <Border HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Gray" BorderThickness="1" Margin="5">
                 <Border.Background>
                     <DrawingBrush TileMode="Tile" DestinationRect="0,0,20,20">
                         <DrawingBrush.Drawing>
@@ -37,8 +37,7 @@
                 </Border.Background>
                 <Image Name="ImgDdsTexture"
                        IsVisible="False"
-                       HorizontalAlignment="Stretch"
-                       VerticalAlignment="Stretch" />
+                       Stretch="Uniform" />
             </Border>
         </Panel>
     </DockPanel>
