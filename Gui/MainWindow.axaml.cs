@@ -23,6 +23,15 @@ public partial class MainWindow : Window
     }
 
     /// <summary>
+    /// Callback method for setting the window title, used for displaying the currently open image in the title bar
+    /// </summary>
+    /// <param name="title"></param>
+    private void SetWindowTitle(string title)
+    {
+        Title = $"TuxDDS - {title}";
+    }
+
+    /// <summary>
     /// Callback method for setting status messages from the controller.
     /// </summary>
     /// <param name="message">Status message to be displayed</param>
@@ -68,7 +77,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            await _mainWindowController.OpenDdsImage(UpdateApplicationStatus, DisplayDdsImage);
+            await _mainWindowController.OpenDdsImage(UpdateApplicationStatus, DisplayDdsImage, SetWindowTitle);
         }
         catch (Exception exception)
         {

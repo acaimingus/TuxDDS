@@ -14,7 +14,7 @@ public class MainWindowController(MainWindow mainWindow)
 {
     private DdsTexture? _loadedDdsImageTexture;
 
-    public async Task OpenDdsImage(Action<string> statusCallback, Action<WriteableBitmap> displayCallback)
+    public async Task OpenDdsImage(Action<string> statusCallback, Action<WriteableBitmap> displayCallback, Action<string> titleCallback)
     {
         // Create a file chooser dialog
         var topLevel = TopLevel.GetTopLevel(mainWindow);
@@ -62,6 +62,9 @@ public class MainWindowController(MainWindow mainWindow)
 
             // Use the display callback to display the image
             displayCallback(writeableBitmap);
+            
+            // Use the title callback to change the window title
+            titleCallback(_loadedDdsImageTexture.FileName);
         }
     }
 }
