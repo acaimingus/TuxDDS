@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Platform.Storage;
+using TuxDDSLib.Dds;
 
 namespace TuxDDSGui.Views;
 
