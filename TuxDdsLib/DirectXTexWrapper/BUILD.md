@@ -20,7 +20,7 @@ cd vcpkg
 ## Install DirectXTex
 
 ```bash
-./vcpkg install directxtex:x64-linux-dynamic
+./vcpkg install directxtex:x64-linux
 ```
 
 ## Install Magic Enum
@@ -30,19 +30,19 @@ To reduce the amount of needed effort to maintain a list of DDS format names I'm
 However C++ does not support static reflection by default, so magic-enum must be installed to get the enum names.
 
 ```bash
-./vcpkg install magic-enum:x64-linux-dynamic
+./vcpkg install magic-enum:x64-linux
 ```
 
 ## Change into the TuxDDS DirectXWrapper directory
 
 ```bash
-cd ../TuxDDS/DirectXTexWrapper
+cd ../TuxDDS/TuxDdsLib/DirectXTexWrapper
 ```
 
 ## Build with CMake
 
 ```bash
-cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$HOME/source/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux-dynamic
+cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$HOME/source/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux
 cmake --build build
 ```
 
@@ -52,7 +52,3 @@ cmake --build build
 mkdir ../lib
 cp build/libDirectXTexWrapper.so ../lib
 ```
-
-## Set the library to be always copied into the output directory
-
-Rightclick libDirectXTexWrapper.so in Rider > Properties... > Copy to output directory > Set to "Copy always"

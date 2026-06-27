@@ -3,11 +3,11 @@
   "configurePresets": [
     {
       "name": "vcpkg-linux",
-      "displayName": "Linux x64 vcpkg Dynamic",
+      "displayName": "Linux x64 vcpkg",
       "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{HOME}/source/vcpkg/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_TARGET_TRIPLET": "x64-linux-dynamic"
+        "VCPKG_TARGET_TRIPLET": "x64-linux"
       }
     }
   ]
