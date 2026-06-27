@@ -5,6 +5,8 @@
         <Nullable>enable</Nullable>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <AssemblyName>TuxDdsGui</AssemblyName>
+        <RootNamespace>TuxDdsGui</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

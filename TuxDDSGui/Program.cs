@@ -1,8 +1,7 @@
-﻿using Avalonia;
-using System;
-using TuxDDSGui;
+﻿using System;
+using Avalonia;
 
-namespace TuxDDS;
+namespace TuxDdsGui;
 
 class Program
 {

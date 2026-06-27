@@ -3,7 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 
-namespace TuxDDSGui.Views;
+namespace TuxDdsGui.Views;
 
 public partial class MainWindow : Window
 {

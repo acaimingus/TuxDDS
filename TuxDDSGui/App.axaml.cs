@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using TuxDDSGui.Views;
+using TuxDdsGui.Views;
 
-namespace TuxDDSGui;
+namespace TuxDdsGui;
 
 public partial class App : Application
 {
