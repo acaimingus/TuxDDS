@@ -17,7 +17,7 @@
             <MenuItem Header="_About" />
         </Menu>
         <Border DockPanel.Dock="Bottom" Padding="10,6">
-            <TextBlock Name="SbApplicationStatus" Text="No status." />
+            <TextBlock Name="SbApplicationStatus" Text="INFO: No status." />
         </Border>
         <Panel Name="StkWindowContent">
             <TextBlock Name="LblNoImage"
