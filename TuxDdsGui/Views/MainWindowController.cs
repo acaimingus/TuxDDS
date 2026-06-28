@@ -49,8 +49,8 @@ public class MainWindowController(MainWindow mainWindow)
             // Get the selected file
             var selectedFile = files[0].TryGetLocalPath();
 
-            // Safety check if there is a selected file
-            if (selectedFile == null)
+            // Safety check if there is a selected DDS file
+            if (selectedFile == null || !selectedFile.EndsWith(".dds", StringComparison.OrdinalIgnoreCase))
             {
                 statusCallback("ERROR: No DDS image was selected.");
                 return;
@@ -91,7 +91,7 @@ public class MainWindowController(MainWindow mainWindow)
         // Return if there is no loaded DDS texture
         if (_loadedDdsImageTexture == null)
         {
-            statusCallback("No image to export.");
+            statusCallback("ERROR: No image to export.");
             return;
         }
 
