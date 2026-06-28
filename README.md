@@ -1,5 +1,14 @@
 # TuxDDS
 
+## TODO
+
+- Rework fatal error dialog
+- Add batch exports
+- Add DDS export in another format
+- Add CLI version
+- Add a thumbnailer
+- Add about dialog
+
 ## Supported DDS Formats
 
 These file formats have been tested and work as expected.
@@ -37,7 +46,7 @@ These file formats have been tested and work as expected.
 - R16G16B16A16_FLOAT
 - R16G16B16A16_SINT
 - R16G16B16A16_SNORM
-- R16G16B16A16_UINT 
+- R16G16B16A16_UINT
 - R16G16B16A16_UNORM
 - R16G16_FLOAT
 - R16G16_SINT
@@ -77,6 +86,6 @@ These file formats have been tested and work as expected.
 - R9G9B9E5_SHAREDEXP
 - Y210
 - Y216
-- Y410 
+- Y410
 - Y416
 - YUY2
