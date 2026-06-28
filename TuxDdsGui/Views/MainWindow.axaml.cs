@@ -98,4 +98,16 @@ public partial class MainWindow : Window
             UpdateApplicationStatus($"FATAL EXCEPTION: {exception.Message}");
         }
     }
+    
+    private async void OnMiExportToJpgClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            await _mainWindowController.ExportImage(ExportFormats.Jpg, UpdateApplicationStatus);
+        }
+        catch (Exception exception)
+        {
+            UpdateApplicationStatus($"FATAL EXCEPTION: {exception.Message}");
+        }
+    }
 }

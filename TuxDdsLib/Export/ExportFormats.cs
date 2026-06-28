@@ -2,5 +2,6 @@ namespace TuxDdsLib.Export;
 
 public enum ExportFormats
 {
-    Png
+    Png,
+    Jpg
 }

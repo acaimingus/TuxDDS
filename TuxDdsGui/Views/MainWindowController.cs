@@ -91,13 +91,17 @@ public class MainWindowController(MainWindow mainWindow)
         })!;
 
         var localFilePath = file?.TryGetLocalPath();
-        
+
         if (localFilePath != null)
         {
             switch (exportFormat)
             {
                 case ExportFormats.Png:
                     Exporter.ExportToPng(localFilePath, _loadedDdsImageTexture.PreviewImageData,
+                        _loadedDdsImageTexture.Width, _loadedDdsImageTexture.Height, statusCallback);
+                    break;
+                case ExportFormats.Jpg:
+                    Exporter.ExportToJpg(localFilePath, _loadedDdsImageTexture.PreviewImageData,
                         _loadedDdsImageTexture.Width, _loadedDdsImageTexture.Height, statusCallback);
                     break;
                 default:
