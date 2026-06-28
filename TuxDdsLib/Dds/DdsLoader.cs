@@ -50,7 +50,7 @@ public static class DdsLoader
         // Check if the provided file path even exists
         if (!File.Exists(filePath))
         {
-            statusCallback.Invoke($"The specified file was not found: {filePath}");
+            statusCallback.Invoke($"ERROR: The specified file was not found: {filePath}");
             return null;
         }
 
@@ -60,13 +60,13 @@ public static class DdsLoader
             ExtractDdsTextureInfo(filePath, out var width, out var height, formatName, out var bitsPerPixel, out var bitsPerColor);
         if (errorCodeInfo != 0)
         {
-            statusCallback.Invoke($"Extracting DDS file data failed with HRESULT {errorCodeInfo}");
+            statusCallback.Invoke($"ERROR: Extracting DDS file data failed with HRESULT {errorCodeInfo}");
             return null;
         }
 
         // Report success to the user
         statusCallback.Invoke(
-            $"Image loaded successfully! Size: {width} x {height} px / Format: {formatName}, {bitsPerPixel} Bits per Pixel, {bitsPerColor} Bits per Color");
+            $"INFO: Image loaded successfully! Size: {width} x {height} px / Format: {formatName}, {bitsPerPixel} Bits per Pixel, {bitsPerColor} Bits per Color");
 
         // Create a buffer to fit the image
         var bytesPerPixel = (int)Math.Ceiling((double)bitsPerPixel / 8);
@@ -78,7 +78,7 @@ public static class DdsLoader
         var errorCodeData = ExtractDdsTextureData(filePath, rawImageData.Length, previewImageData.Length, rawImageData, previewImageData);
         if (errorCodeData != 0)
         {
-            statusCallback.Invoke($"Extracting DDS data failed with HRESULT {errorCodeData}");
+            statusCallback.Invoke($"ERROR: Extracting DDS data failed with HRESULT {errorCodeData}");
             return null;
         }
         

@@ -26,12 +26,12 @@ public static class Exporter
             var writer = new ImageWriter();
 
             writer.WritePng(imageData, imageWidth, imageHeight, ColorComponents.RedGreenBlueAlpha, stream);
-            statusCallback($"Export to {outputFilePath} as .PNG was successful!");
+            statusCallback($"INFO: Export to {outputFilePath} as .PNG was successful!");
         }
         catch (Exception exception)
         {
             // Update the status message and return
-            statusCallback($"Exporting the image failed: {exception.Message}");
+            statusCallback($"ERROR: Exporting the image failed: {exception.Message}");
         }
     }
 
@@ -58,12 +58,12 @@ public static class Exporter
 
             // Use 100% quality always
             writer.WriteJpg(imageData, imageWidth, imageHeight, ColorComponents.RedGreenBlueAlpha, stream, 100);
-            statusCallback($"Export to {outputFilePath} as .JPG was successful!");
+            statusCallback($"INFO: Export to {outputFilePath} as .JPG was successful!");
         }
         catch (Exception exception)
         {
             // Update the status message and return
-            statusCallback($"Exporting the image failed: {exception.Message}");
+            statusCallback($"ERROR: Exporting the image failed: {exception.Message}");
         }
     }
 }
