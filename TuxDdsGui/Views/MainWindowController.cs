@@ -6,16 +6,18 @@ using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Platform.Storage;
+using TuxDdsLib;
 using TuxDDSLib.Dds;
+using TuxDdsLib.Export;
 
 namespace TuxDdsGui.Views;
 
 public class MainWindowController(MainWindow mainWindow)
 {
     private DdsTexture? _loadedDdsImageTexture;
-    
-    
-    public async Task OpenDdsImage(Action<string> statusCallback, Action<WriteableBitmap> displayCallback, Action<string> titleCallback)
+
+    public async Task OpenDdsImage(Action<string> statusCallback, Action<WriteableBitmap> displayCallback,
+        Action<string> titleCallback)
     {
         // Create a file chooser dialog
         var topLevel = TopLevel.GetTopLevel(mainWindow);
@@ -63,9 +65,45 @@ public class MainWindowController(MainWindow mainWindow)
 
             // Use the display callback to display the image
             displayCallback(writeableBitmap);
-            
+
             // Use the title callback to change the window title
             titleCallback(_loadedDdsImageTexture.FileName);
+        }
+    }
+
+    public async Task ExportImage(ExportFormats exportFormat, Action<string> statusCallback)
+    {
+        // Return if there is no loaded DDS texture
+        if (_loadedDdsImageTexture == null)
+        {
+            statusCallback("No image to export.");
+            return;
+        }
+
+        // Create a file saver dialog
+        var topLevel = TopLevel.GetTopLevel(mainWindow);
+
+        var file = await topLevel?.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        {
+            Title = $"Export to {exportFormat.ToString()}",
+            DefaultExtension = $".{exportFormat.ToString().ToLower()}",
+            ShowOverwritePrompt = true,
+        })!;
+
+        var localFilePath = file?.TryGetLocalPath();
+        
+        if (localFilePath != null)
+        {
+            switch (exportFormat)
+            {
+                case ExportFormats.Png:
+                    Exporter.ExportToPng(localFilePath, _loadedDdsImageTexture.PreviewImageData,
+                        _loadedDdsImageTexture.Width, _loadedDdsImageTexture.Height, statusCallback);
+                    break;
+                default:
+                    statusCallback($"Selected invalid export format: {exportFormat.ToString()}");
+                    return;
+            }
         }
     }
 }

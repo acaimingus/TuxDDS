@@ -2,6 +2,8 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using TuxDdsLib;
+using TuxDdsLib.Export;
 
 namespace TuxDdsGui.Views;
 
@@ -85,8 +87,15 @@ public partial class MainWindow : Window
         }
     }
 
-    private void OnMiExportToPngClick(object? sender, RoutedEventArgs e)
+    private async void OnMiExportToPngClick(object? sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        try
+        {
+            await _mainWindowController.ExportImage(ExportFormats.Png, UpdateApplicationStatus);
+        }
+        catch (Exception exception)
+        {
+            UpdateApplicationStatus($"FATAL EXCEPTION: {exception.Message}");
+        }
     }
 }
