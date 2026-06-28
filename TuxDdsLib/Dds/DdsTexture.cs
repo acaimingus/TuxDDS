@@ -1,47 +1,48 @@
 namespace TuxDDSLib.Dds;
 
 /// <summary>
-/// Description class for all the information needed about the DDS texture
+/// Description class for all the information needed about the DDS texture.
 /// </summary>
 public class DdsTexture
 {
     /// <summary>
-    /// The name of the file
+    /// The name of the file.
     /// </summary>
     public required string FileName { get; init; }
 
     /// <summary>
-    /// The path to the file
+    /// The path to the file.
     /// </summary>
     public required string Path { get; init; }
 
     /// <summary>
-    /// The width of the image in pixels
+    /// The width of the image in pixels.
     /// </summary>
     public required int Width { get; init; }
 
     /// <summary>
-    /// The height of the image in pixels
+    /// The height of the image in pixels.
     /// </summary>
     public required int Height { get; init; }
 
     /// <summary>
-    /// The name of the image format as specified by DirectXTex
+    /// The name of the image format as specified by DirectXTex.
     /// </summary>
     public required string ImageFormat { get; init; }
 
     /// <summary>
-    /// The amount of bits needed per pixel for the image format
+    /// The amount of bits needed per pixel for the image format.
     /// </summary>
     public required int BitsPerPixel { get; init; }
 
     /// <summary>
-    /// The amount of bits needed per color channel for the image format
+    /// The amount of bits needed per color channel for the image format.
     /// </summary>
     public required int BitsPerColor { get; init; }
 
     /// <summary>
-    /// Array containing the raw DDS image data (if the image was uncompressed, else it's raw R8G8B8A8_UNORM)
+    /// Array containing the raw DDS image data (if the image was uncompressed, else it's raw R8G8B8A8_UNORM).
+    /// Unused, but kept in case a format can handle the raw image data for a lossless export.
     /// </summary>
     public required byte[] RawImageData { get; init; }
 

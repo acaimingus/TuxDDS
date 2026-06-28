@@ -6,16 +6,25 @@ using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Platform.Storage;
-using TuxDdsLib;
 using TuxDDSLib.Dds;
 using TuxDdsLib.Export;
 
 namespace TuxDdsGui.Views;
 
+/// <summary>
+/// Controller class for the main window view.
+/// </summary>
+/// <param name="mainWindow">Reference to the main window class</param>
 public class MainWindowController(MainWindow mainWindow)
 {
     private DdsTexture? _loadedDdsImageTexture;
 
+    /// <summary>
+    /// Method for handling the request to open a DDS image texture.
+    /// </summary>
+    /// <param name="statusCallback">Status callback method to return messages to the UI</param>
+    /// <param name="displayCallback">Display callback to hand over the image to display to the UI</param>
+    /// <param name="titleCallback">Title callback to set the window title to the loaded image path</param>
     public async Task OpenDdsImage(Action<string> statusCallback, Action<WriteableBitmap> displayCallback,
         Action<string> titleCallback)
     {
@@ -71,6 +80,12 @@ public class MainWindowController(MainWindow mainWindow)
         }
     }
 
+    
+    /// <summary>
+    /// Method for handling an export request from the UI.
+    /// </summary>
+    /// <param name="exportFormat">The requested format for the export</param>
+    /// <param name="statusCallback">Status callback method to return messages to the UI</param>
     public async Task ExportImage(ExportFormats exportFormat, Action<string> statusCallback)
     {
         // Return if there is no loaded DDS texture

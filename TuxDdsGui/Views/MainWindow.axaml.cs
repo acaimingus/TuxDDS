@@ -7,6 +7,9 @@ using TuxDdsLib.Export;
 
 namespace TuxDdsGui.Views;
 
+/// <summary>
+/// Code-behind for the main window view.
+/// </summary>
 public partial class MainWindow : Window
 {
     /// <summary>
@@ -87,7 +90,12 @@ public partial class MainWindow : Window
         }
     }
 
-    private async void OnMiExportToPngClick(object? sender, RoutedEventArgs e)
+    /// <summary>
+    /// Event handler for clicking the Export to PNG option in the top menu
+    /// </summary>
+    /// <param name="sender">Event sender</param>
+    /// <param name="eventArgs">Event arguments</param>
+    private async void OnMiExportToPngClick(object? sender, RoutedEventArgs eventArgs)
     {
         try
         {
@@ -99,7 +107,12 @@ public partial class MainWindow : Window
         }
     }
     
-    private async void OnMiExportToJpgClick(object? sender, RoutedEventArgs e)
+    /// <summary>
+    /// Event handler for clicking the Export to JPG option in the top menu
+    /// </summary>
+    /// <param name="sender">Event sender</param>
+    /// <param name="eventArgs">Event arguments</param>
+    private async void OnMiExportToJpgClick(object? sender, RoutedEventArgs eventArgs)
     {
         try
         {
