@@ -80,20 +80,34 @@ public class MainWindowController(MainWindow mainWindow)
             return;
         }
 
-        // Create a file saver dialog
+        // Create the needed extension format
+        var extension = $".{exportFormat.ToString().ToLower()}";
+        
+        // Create a file saver dialog and get the path to save the file
         var topLevel = TopLevel.GetTopLevel(mainWindow);
-
         var file = await topLevel?.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = $"Export to {exportFormat.ToString()}",
-            DefaultExtension = $".{exportFormat.ToString().ToLower()}",
+            DefaultExtension = extension,
             ShowOverwritePrompt = true,
+            FileTypeChoices =
+            [
+                new FilePickerFileType($"{exportFormat.ToString().ToUpper()} Image")
+                {
+                    Patterns = [$"*{extension}"]
+                }
+            ]
         })!;
 
         var localFilePath = file?.TryGetLocalPath();
 
         if (localFilePath != null)
         {
+            if (!localFilePath.EndsWith(extension, StringComparison.OrdinalIgnoreCase))
+            {
+                localFilePath += extension;
+            }
+
             switch (exportFormat)
             {
                 case ExportFormats.Png:
@@ -105,7 +119,7 @@ public class MainWindowController(MainWindow mainWindow)
                         _loadedDdsImageTexture.Width, _loadedDdsImageTexture.Height, statusCallback);
                     break;
                 default:
-                    statusCallback($"Selected invalid export format: {exportFormat.ToString()}");
+                    statusCallback($"ERROR: Selected invalid export format: {exportFormat.ToString()}");
                     return;
             }
         }
