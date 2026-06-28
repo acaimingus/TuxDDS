@@ -6,10 +6,11 @@ using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Platform.Storage;
+using TuxDdsGui.Views;
 using TuxDDSLib.Dds;
 using TuxDdsLib.Export;
 
-namespace TuxDdsGui.Views;
+namespace TuxDdsGui.Controllers;
 
 /// <summary>
 /// Controller class for the main window view.

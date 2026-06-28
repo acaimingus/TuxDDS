@@ -2,7 +2,7 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
-using TuxDdsLib;
+using TuxDdsGui.Controllers;
 using TuxDdsLib.Export;
 
 namespace TuxDdsGui.Views;
