@@ -2,8 +2,8 @@
 
 ## TODO
 
-- Rework fatal error dialog
 - Add batch exports
+- Add zooming and dragging in the image preview
 - Add DDS export in another format
 - Add CLI version
 - Add a thumbnailer
