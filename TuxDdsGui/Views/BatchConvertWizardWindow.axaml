@@ -27,6 +27,9 @@
             <RadioButton Content="Batch rename to: " />
             <TextBox Width="200" HorizontalAlignment="Left" />
             <Label Content="path/to/file/file1.dds" />
+            <RadioButton Content="Append to name: " />
+            <TextBox Width="200" HorizontalAlignment="Left" />
+            <Label Content="path/to/file/file1-append.dds" />
             <Separator Margin="0,10, 0, 0" />
             <Label Content="Output format:" Margin="0,10, 0, 0" />
             <ComboBox Name="CbOutputFormats" Width="200" />
