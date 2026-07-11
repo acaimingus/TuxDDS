@@ -86,8 +86,7 @@ public partial class MainWindow : Window
         }
         catch (Exception exception)
         {
-            UpdateApplicationStatus("FATAL ERROR: Please see the pop-up for details.");
-            await DialogHelper.ShowErrorDialog(this, "Fatal Exception", exception.ToString());
+            UpdateApplicationStatus($"ERROR: {exception.Message}");
         }
     }
 
@@ -104,8 +103,7 @@ public partial class MainWindow : Window
         }
         catch (Exception exception)
         {
-            UpdateApplicationStatus($"FATAL ERROR: Please see the pop-up for details");
-            await DialogHelper.ShowErrorDialog(this, "Fatal Exception", exception.ToString());
+            UpdateApplicationStatus($"ERROR: {exception.Message}");
         }
     }
     
@@ -122,8 +120,7 @@ public partial class MainWindow : Window
         }
         catch (Exception exception)
         {
-            UpdateApplicationStatus($"FATAL ERROR: Please see the pop-up for details");
-            await DialogHelper.ShowErrorDialog(this, "Fatal Exception", exception.ToString());
+            UpdateApplicationStatus($"ERROR: {exception.Message}");
         }
     }
 }
