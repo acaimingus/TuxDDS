@@ -123,4 +123,22 @@ public partial class MainWindow : Window
             UpdateApplicationStatus($"ERROR: {exception.Message}");
         }
     }
+    
+    /// <summary>
+    /// Event handler for clicking the batch convert wizard option in the top menu
+    /// </summary>
+    /// <param name="sender">Event sender</param>
+    /// <param name="eventArgs">Event arguments</param>
+    private async void OnMiBatchConvertClick(object? sender, RoutedEventArgs eventArgs)
+    {
+        try
+        {
+            var batchConvertWizardWindow = new BatchConvertWizardWindow();
+            await batchConvertWizardWindow.ShowDialog(this);
+        }
+        catch (Exception exception)
+        {
+            UpdateApplicationStatus($"ERROR: {exception.Message}");
+        }
+    }
 }
