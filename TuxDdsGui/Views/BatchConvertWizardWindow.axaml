@@ -10,15 +10,15 @@
         <StackPanel Margin="10">
             <Label Content="Folder with DDS files to convert:" />
             <StackPanel Orientation="Horizontal">
-                <TextBox Width="200" Margin="0,0,10,0" />
-                <Button Content="..." Width="30" />
+                <TextBox Name="TbInputFolder" Width="200" Margin="0,0,10,0" />
+                <Button Content="..." Width="30" Click="BtnSelectInputFolderClicked" />
             </StackPanel>
             <CheckBox Content="Search folders recursively" Margin="0,10, 0,0" />
             <Separator Margin="0,10, 0, 0" />
             <Label Content="Output folder:" Margin="0,10, 0, 0" />
             <StackPanel Orientation="Horizontal">
-                <TextBox Width="200" Margin="0,0,10,0" />
-                <Button Content="..." Width="30" />
+                <TextBox Name="TbOutputFolder" Width="200" Margin="0,0,10,0" />
+                <Button Content="..." Width="30" Click="BtnSelectOutputFolderClicked" />
             </StackPanel>
             <CheckBox Content="Keep folder structure" Margin="0,10, 0,0" />
             <Separator Margin="0,10, 0, 0" />

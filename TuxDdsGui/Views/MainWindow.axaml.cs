@@ -133,7 +133,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            var batchConvertWizardWindow = new BatchConvertWizardWindow();
+            var batchConvertWizardWindow = new BatchConvertWizardWindow(UpdateApplicationStatus);
             await batchConvertWizardWindow.ShowDialog(this);
         }
         catch (Exception exception)
