@@ -110,7 +110,7 @@ public class MainWindowController(MainWindow mainWindow)
             ShowOverwritePrompt = true,
             FileTypeChoices =
             [
-                new FilePickerFileType($"{exportFormat.ToString().ToUpper()} Image")
+                new FilePickerFileType($"{exportFormat.ToString()} Image")
                 {
                     Patterns = [$"*{extension}"]
                 }
@@ -128,11 +128,11 @@ public class MainWindowController(MainWindow mainWindow)
 
             switch (exportFormat)
             {
-                case ExportFormats.Png:
+                case ExportFormats.PNG:
                     Exporter.ExportToPng(localFilePath, _loadedDdsImageTexture.PreviewImageData,
                         _loadedDdsImageTexture.Width, _loadedDdsImageTexture.Height, statusCallback);
                     break;
-                case ExportFormats.Jpg:
+                case ExportFormats.JPG:
                     Exporter.ExportToJpg(localFilePath, _loadedDdsImageTexture.PreviewImageData,
                         _loadedDdsImageTexture.Width, _loadedDdsImageTexture.Height, statusCallback);
                     break;

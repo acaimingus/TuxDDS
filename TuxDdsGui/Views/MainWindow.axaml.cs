@@ -99,7 +99,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            await _mainWindowController.ExportImage(ExportFormats.Png, UpdateApplicationStatus);
+            await _mainWindowController.ExportImage(ExportFormats.PNG, UpdateApplicationStatus);
         }
         catch (Exception exception)
         {
@@ -116,7 +116,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            await _mainWindowController.ExportImage(ExportFormats.Jpg, UpdateApplicationStatus);
+            await _mainWindowController.ExportImage(ExportFormats.JPG, UpdateApplicationStatus);
         }
         catch (Exception exception)
         {
