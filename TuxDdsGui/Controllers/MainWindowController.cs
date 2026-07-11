@@ -34,6 +34,7 @@ public class MainWindowController(MainWindow mainWindow)
         var files = await topLevel!.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = "Load a DDS image texture",
+            SuggestedStartLocation =  await topLevel.StorageProvider.TryGetWellKnownFolderAsync(WellKnownFolder.Desktop),
             AllowMultiple = false,
             FileTypeFilter =
             [
@@ -104,6 +105,7 @@ public class MainWindowController(MainWindow mainWindow)
         var file = await topLevel?.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = $"Export to {exportFormat.ToString()}",
+            SuggestedStartLocation =  await topLevel.StorageProvider.TryGetWellKnownFolderAsync(WellKnownFolder.Desktop),
             DefaultExtension = extension,
             ShowOverwritePrompt = true,
             FileTypeChoices =
