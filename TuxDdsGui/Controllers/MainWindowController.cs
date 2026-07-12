@@ -137,7 +137,7 @@ public class MainWindowController(MainWindow mainWindow)
                         _loadedDdsImageTexture.Width, _loadedDdsImageTexture.Height, statusCallback);
                     break;
                 default:
-                    statusCallback($"INFO: Selected invalid export format: {exportFormat.ToString()}");
+                    statusCallback($"ERROR: Selected invalid export format: {exportFormat.ToString()}");
                     return;
             }
         }
