@@ -3,6 +3,7 @@
 ## TODO
 
 - Add batch exports
+- Refine error handling/logging
 - Add zooming and dragging in the image preview
 - Add DDS export in another format
 - Add CLI version
