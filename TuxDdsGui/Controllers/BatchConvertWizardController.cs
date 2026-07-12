@@ -29,7 +29,7 @@ public class BatchConvertWizardController(BatchConvertWizardWindow batchConvertW
 
     public static async Task BatchConvert(string inputFolder, string outputFolder, bool recursiveSearch,
         bool keepFolderStructure,
-        ExportFormats outputFormat, Action<string> statusCallback)
+        ExportFormats outputFormat, Action<string> statusCallback, NamingStrategies namingStrategy, string? namingString)
     {
         await Task.Run(() =>
         {
@@ -41,6 +41,9 @@ public class BatchConvertWizardController(BatchConvertWizardWindow batchConvertW
             };
             var ddsFiles = Directory.GetFiles(inputFolder, "*.dds", options);
 
+            // Counter for the batch renaming strategy
+            var batchRenameIndex = 1;
+            
             foreach (var ddsFile in ddsFiles)
             {
                 // Update the status
@@ -48,19 +51,38 @@ public class BatchConvertWizardController(BatchConvertWizardWindow batchConvertW
 
                 // Load the DDS image
                 var ddsTexture = DdsLoader.LoadDdsTexture(ddsFile, statusCallback);
-
+                
                 // Export
                 if (ddsTexture != null)
                 {
-                    string? outputFilePath = null;
-
+                    string? outputFilePath;
+                    
+                    // Rename the files based on the naming strategy
+                    var baseFileName =  Path.GetFileNameWithoutExtension(ddsFile);
+                    switch (namingStrategy)
+                    {
+                        case NamingStrategies.BatchRename:
+                            baseFileName = $"{namingString}-{batchRenameIndex}";
+                            batchRenameIndex++;
+                            break;
+                        case NamingStrategies.Append:
+                            baseFileName = $"{baseFileName}-{namingString}";
+                            break;
+                        case NamingStrategies.KeepName:
+                        default:
+                            // Keep the default baseFileName
+                            break;
+                    }
+                    
+                    var extension = outputFormat.ToString().ToLower();
+                    
                     // Build the output file path
                     if (keepFolderStructure)
                     {
                         // Determine the relative path
                         var relativePath = Path.GetRelativePath(inputFolder, ddsFile);
 
-                        // Get the relative directories inbetween
+                        // Get the relative directories in between
                         var relativeDir = Path.GetDirectoryName(relativePath);
 
                         // Create the target directory on the filesystem
@@ -70,18 +92,14 @@ public class BatchConvertWizardController(BatchConvertWizardWindow batchConvertW
                         Directory.CreateDirectory(targetDir);
 
                         // Generate final path
-                        var originalFileName = Path.GetFileNameWithoutExtension(ddsFile);
-                        var extension = outputFormat.ToString().ToLower();
-                        outputFilePath = Path.Combine(targetDir, $"{originalFileName}.{extension}");
+                        outputFilePath = Path.Combine(targetDir, $"{baseFileName}.{extension}");
                     }
                     else
                     {
                         // Just put it all in the top directory
-                        var originalFileName = Path.GetFileNameWithoutExtension(ddsFile);
-                        var extension = outputFormat.ToString().ToLower();
-                        outputFilePath = Path.Combine(outputFolder, $"{originalFileName}.{extension}");
+                        outputFilePath = Path.Combine(outputFolder, $"{baseFileName}.{extension}");
                     }
-
+                    
                     // Do the actual export
                     switch (outputFormat)
                     {

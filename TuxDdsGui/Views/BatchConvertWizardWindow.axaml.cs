@@ -87,16 +87,33 @@ public partial class BatchConvertWizardWindow : Window
             // Get the values of the checkboxes
             var recursive = ChkRecursive.IsChecked == true;
             var keepFolders = ChkKeepFolders.IsChecked == true;
-        
+            
             // Check if the selected output format is a valid enum
             if (CbOutputFormats.SelectedItem is ExportFormats selectedFormat)
             {
                 // Check if the paths are not empty
                 if (TbInputFolder.Text != null && TbOutputFolder.Text != null)
                 {
-                    // Start the batch conversion
-                    _ = BatchConvertWizardController.BatchConvert(TbInputFolder.Text, TbOutputFolder.Text,
-                        recursive, keepFolders, selectedFormat, _statusCallback);
+                    // Get the selected naming strategy
+                    if (RbKeepName.IsChecked == true)
+                    {
+                        // Start the batch conversion
+                        _ = BatchConvertWizardController.BatchConvert(TbInputFolder.Text, TbOutputFolder.Text,
+                            recursive, keepFolders, selectedFormat, _statusCallback, NamingStrategies.KeepName, null);
+                    }
+                    if (RbBatchRename.IsChecked == true)
+                    {
+                        // Start the batch conversion
+                        _ = BatchConvertWizardController.BatchConvert(TbInputFolder.Text, TbOutputFolder.Text,
+                            recursive, keepFolders, selectedFormat, _statusCallback, NamingStrategies.BatchRename, TbBatchRename.Text);
+                    }
+                    if (RbAppendName.IsChecked == true)
+                    {
+                        // Start the batch conversion
+                        _ = BatchConvertWizardController.BatchConvert(TbInputFolder.Text, TbOutputFolder.Text,
+                            recursive, keepFolders, selectedFormat, _statusCallback, NamingStrategies.Append, TbAppendName.Text);
+                    }
+                    
                     // Close the wizard
                     Close();
                 }
