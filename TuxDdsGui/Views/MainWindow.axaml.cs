@@ -42,7 +42,7 @@ public partial class MainWindow : Window
     /// <param name="message">Status message to be displayed</param>
     private void UpdateApplicationStatus(string message)
     {
-        SbApplicationStatus.Text = message;
+        Avalonia.Threading.Dispatcher.UIThread.Post(() => SbApplicationStatus.Text = message);
     }
 
     /// <summary>
