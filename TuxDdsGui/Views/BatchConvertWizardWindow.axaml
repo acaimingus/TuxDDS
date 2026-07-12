@@ -31,14 +31,18 @@
                 <RadioButton Name="RbKeepName" Content="Keep name" IsChecked="True" IsEnabled="False" />
                 <RadioButton Name="RbBatchRename" Content="Batch rename to: " Margin="0,5,0,0" IsEnabled="False" />
                 <TextBox Name="TbBatchRename" Width="240" HorizontalAlignment="Left" IsEnabled="False" />
-                <Label Name="LblBatchRenameHint" Content="path/to/file/file1.dds" Foreground="Gray" FontSize="11" IsEnabled="False" />
+                <ScrollViewer MaxWidth="240" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <Label Name="LblBatchRenameHint" Foreground="Gray" FontSize="11" IsEnabled="False" />
+                </ScrollViewer>
                 <RadioButton Name="RbAppendName" Content="Append to name: " Margin="0,5,0,0" IsEnabled="False" />
                 <TextBox Name="TbAppendName" Width="240" HorizontalAlignment="Left" IsEnabled="False" />
-                <Label Name="LblAppendNameHint" Content="path/to/file/file1-append.dds" Foreground="Gray" FontSize="11" IsEnabled="False" />
+                <ScrollViewer MaxWidth="240" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <Label Name="LblAppendNameHint" Foreground="Gray" FontSize="11" IsEnabled="False" />
+                </ScrollViewer>
             </StackPanel>
             <StackPanel Grid.Row="2" Grid.Column="2">
                 <Label Content="Output format:" />
-                <ComboBox Name="CbOutputFormats" Width="240" />
+                <ComboBox Name="CbOutputFormats" Width="240" IsEnabled="False" />
             </StackPanel>
             <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,15" />
             <Button Name="BtnConvert" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"

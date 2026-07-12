@@ -21,7 +21,8 @@ public partial class BatchConvertWizardWindow : Window
 
         CbOutputFormats.ItemsSource = Enum.GetValues<ExportFormats>();
         CbOutputFormats.SelectedIndex = 0;
-        
+
+        CbOutputFormats.SelectionChanged += (_, _) => EvaluatePropertyChanges();
         TbInputFolder.TextChanged += (_, _) => EvaluatePropertyChanges();
         TbOutputFolder.TextChanged += (_, _) => EvaluatePropertyChanges();
         TbAppendName.TextChanged += (_, _) => EvaluatePropertyChanges();
@@ -35,14 +36,23 @@ public partial class BatchConvertWizardWindow : Window
     {
         // Check if the convert button is enabled
         BtnConvert.IsEnabled = IsConvertEnabled();
+
         // Check if naming strategy can be selected
         RbKeepName.IsEnabled = IsNamingEnabled();
-        RbAppendName.IsEnabled =  IsNamingEnabled();
-        TbAppendName.IsEnabled = IsNamingEnabled();
-        LblAppendNameHint.IsEnabled = IsNamingEnabled();
+        RbAppendName.IsEnabled = IsNamingEnabled();
+        TbAppendName.IsEnabled = IsAppendRenameEnabled();
+        LblAppendNameHint.IsEnabled = IsAppendRenameEnabled();
         RbBatchRename.IsEnabled = IsNamingEnabled();
-        TbBatchRename.IsEnabled = IsNamingEnabled();
-        LblBatchRenameHint.IsEnabled = IsNamingEnabled();
+        TbBatchRename.IsEnabled = IsBatchRenameEnabled();
+        LblBatchRenameHint.IsEnabled = IsBatchRenameEnabled();
+        CbOutputFormats.IsEnabled = IsNamingEnabled();
+
+        // Set the hints for the naming strategies
+        if (IsNamingEnabled())
+        {
+            SetAppendHint();
+            SetBatchRenameHint();
+        }
     }
 
     private async void BtnSelectInputFolderClicked(object? sender, RoutedEventArgs e)
@@ -101,14 +111,49 @@ public partial class BatchConvertWizardWindow : Window
 
         return true;
     }
-
+    
     /// <summary>
-    /// Quick check if the naming strategy options should be enabled
+    /// Quick check if the naming strategies in general should be enabled
     /// </summary>
-    /// <returns>True, if a valid path has been selected, else False</returns>
+    /// <returns>True, if valid paths are given, else False</returns>
     private bool IsNamingEnabled()
     {
         return ValidatePaths();
+    }
+    
+    /// <summary>
+    /// Quick check if the needed fields for the append strategy are set/selected
+    /// </summary>
+    /// <returns>True, if append renaming should be enabled, else False</returns>
+    private bool IsAppendRenameEnabled()
+    {
+        return ValidatePaths() && RbAppendName.IsChecked == true;
+    }
+
+    /// <summary>
+    /// Quick check if the needed fields for the batch rename strategy are set/selected
+    /// </summary>
+    /// <returns>True, if batch renaming should be enabled, else False</returns>
+    private bool IsBatchRenameEnabled()
+    {
+        return ValidatePaths() && RbBatchRename.IsChecked == true;
+    }
+    
+    /// <summary>
+    /// Method for setting the example file path when using the append naming strategy
+    /// </summary>
+    private void SetAppendHint()
+    {
+        LblAppendNameHint.Content =
+            $"{TbOutputFolder.Text}{{FILENAME}}-{TbAppendName.Text}.{CbOutputFormats.Text!.ToLower()}";
+    }
+
+    /// <summary>
+    /// Method for setting the example file path when using the batch rename strategy
+    /// </summary>
+    private void SetBatchRenameHint()
+    {
+        LblBatchRenameHint.Content = $"{TbOutputFolder.Text}{TbBatchRename.Text}-1.{CbOutputFormats.Text!.ToLower()}";
     }
 
     /// <summary>
