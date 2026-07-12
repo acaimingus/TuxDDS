@@ -1,8 +1,11 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using TuxDdsGui.Views;
+using TuxDDSLib.Dds;
+using TuxDdsLib.Export;
 
 namespace TuxDdsGui.Controllers;
 
@@ -22,5 +25,53 @@ public class BatchConvertWizardController(BatchConvertWizardWindow batchConvertW
 
         // Return the folder name if correctly selected, else throw an exception
         return folder.Count > 0 ? folder[0].Path.LocalPath : throw new FileNotFoundException("No folder was selected.");
+    }
+
+    public static async Task BatchConvert(string inputFolder, string outputFolder, bool recursiveSearch, bool keepFolderStructure,
+        ExportFormats outputFormat, Action<string> statusCallback)
+    {
+        await Task.Run(() =>
+        {
+            // Search the input directory for DDS files
+            var options = new EnumerationOptions
+            {
+                RecurseSubdirectories = recursiveSearch,
+                MatchCasing = MatchCasing.CaseInsensitive
+            };
+            var ddsFiles = Directory.GetFiles(inputFolder, "*.dds", options);
+        
+            foreach (var ddsFile in ddsFiles)
+            {
+                // Update the status
+                statusCallback($"INFO: Converting {ddsFile}...");
+                        
+                // Load the DDS image
+                var ddsTexture = DdsLoader.LoadDdsTexture(ddsFile, statusCallback);
+                
+                // Export
+                if (ddsTexture != null)
+                {
+                    // Build the output file path
+                    var originalFileName = Path.GetFileNameWithoutExtension(ddsFile);
+                    var extension = outputFormat.ToString().ToLower();
+                    var outputFilePath = Path.Combine(outputFolder, $"{originalFileName}.{extension}");
+                    
+                    switch (outputFormat)
+                    {
+                        case ExportFormats.PNG:
+                            Exporter.ExportToPng(outputFilePath, ddsTexture.PreviewImageData,
+                                ddsTexture.Width, ddsTexture.Height, statusCallback);
+                            break;
+                        case ExportFormats.JPG:
+                            Exporter.ExportToJpg(outputFilePath, ddsTexture.PreviewImageData,
+                                ddsTexture.Width, ddsTexture.Height, statusCallback);
+                            break;
+                        default:
+                            statusCallback($"ERROR: Selected invalid export format: {outputFormat.ToString()}");
+                            return;
+                    }
+                }
+            }
+        });
     }
 }

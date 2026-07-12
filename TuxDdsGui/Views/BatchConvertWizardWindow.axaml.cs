@@ -80,6 +80,42 @@ public partial class BatchConvertWizardWindow : Window
         }
     }
 
+    private async void BtnConvertClicked(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            // Get the values of the checkboxes
+            var recursive = ChkRecursive.IsChecked == true;
+            var keepFolders = ChkKeepFolders.IsChecked == true;
+        
+            // Check if the selected output format is a valid enum
+            if (CbOutputFormats.SelectedItem is ExportFormats selectedFormat)
+            {
+                // Check if the paths are not empty
+                if (TbInputFolder.Text != null && TbOutputFolder.Text != null)
+                {
+                    // Start the batch conversion
+                    _ = BatchConvertWizardController.BatchConvert(TbInputFolder.Text, TbOutputFolder.Text,
+                        recursive, keepFolders, selectedFormat, _statusCallback);
+                    // Close the wizard
+                    Close();
+                }
+                else
+                {
+                    _statusCallback("ERROR: The input/output path was empty.");
+                }
+            }
+            else
+            {
+                _statusCallback("ERROR: The selected output format was invalid?");
+            }
+        }
+        catch (Exception exception)
+        {
+            _statusCallback($"ERROR: {exception.Message}");
+        }
+    }
+
     /// <summary>
     /// Quick check whether to enable the convert button; needs input, output and name set
     /// </summary>
@@ -111,7 +147,7 @@ public partial class BatchConvertWizardWindow : Window
 
         return true;
     }
-    
+
     /// <summary>
     /// Quick check if the naming strategies in general should be enabled
     /// </summary>
@@ -120,7 +156,7 @@ public partial class BatchConvertWizardWindow : Window
     {
         return ValidatePaths();
     }
-    
+
     /// <summary>
     /// Quick check if the needed fields for the append strategy are set/selected
     /// </summary>
@@ -138,7 +174,7 @@ public partial class BatchConvertWizardWindow : Window
     {
         return ValidatePaths() && RbBatchRename.IsChecked == true;
     }
-    
+
     /// <summary>
     /// Method for setting the example file path when using the append naming strategy
     /// </summary>
