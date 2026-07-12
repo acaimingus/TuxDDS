@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using TuxDdsGui.Controllers;
@@ -69,10 +70,13 @@ public partial class BatchConvertWizardWindow : Window
         }
     }
 
+    /// <summary>
+    /// Quick check whether to enable the convert button; needs input, output and name set
+    /// </summary>
+    /// <returns>True, if the button should be enabled, else False</returns>
     private bool IsConvertEnabled()
     {
-        // Check if the output and input directories are set
-        if (string.IsNullOrWhiteSpace(TbInputFolder.Text) || string.IsNullOrWhiteSpace(TbOutputFolder.Text))
+        if (!ValidatePaths())
         {
             return false;
         }
@@ -98,14 +102,34 @@ public partial class BatchConvertWizardWindow : Window
         return true;
     }
 
+    /// <summary>
+    /// Quick check if the naming strategy options should be enabled
+    /// </summary>
+    /// <returns>True, if a valid path has been selected, else False</returns>
     private bool IsNamingEnabled()
     {
-        // Check if the output and input directories are set
+        return ValidatePaths();
+    }
+
+    /// <summary>
+    /// Helper method for quick verification, if the user input valid paths into the input and output fields
+    /// </summary>
+    /// <returns>True, if not empty and a valid path, else False</returns>
+    private bool ValidatePaths()
+    {
+        // Check if the output and input directories are not whitespace or empty
         if (string.IsNullOrWhiteSpace(TbInputFolder.Text) || string.IsNullOrWhiteSpace(TbOutputFolder.Text))
         {
             return false;
         }
-        
+
+        // Check if the output and input directories are existing paths
+        if (!Directory.Exists(TbInputFolder.Text) || !Directory.Exists(TbOutputFolder.Text))
+        {
+            return false;
+        }
+
+        // Looks fine
         return true;
     }
 }
