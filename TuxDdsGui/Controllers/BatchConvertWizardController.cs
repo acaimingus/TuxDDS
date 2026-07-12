@@ -72,6 +72,7 @@ public class BatchConvertWizardController(BatchConvertWizardWindow batchConvertW
                     }
                 }
             }
+            statusCallback($"INFO: Finished the batch conversion of {ddsFiles.Length} files in {inputFolder} successfully.");
         });
     }
 }
