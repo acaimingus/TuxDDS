@@ -27,7 +27,8 @@ public class BatchConvertWizardController(BatchConvertWizardWindow batchConvertW
         return folder.Count > 0 ? folder[0].Path.LocalPath : throw new FileNotFoundException("No folder was selected.");
     }
 
-    public static async Task BatchConvert(string inputFolder, string outputFolder, bool recursiveSearch, bool keepFolderStructure,
+    public static async Task BatchConvert(string inputFolder, string outputFolder, bool recursiveSearch,
+        bool keepFolderStructure,
         ExportFormats outputFormat, Action<string> statusCallback)
     {
         await Task.Run(() =>
@@ -39,23 +40,47 @@ public class BatchConvertWizardController(BatchConvertWizardWindow batchConvertW
                 MatchCasing = MatchCasing.CaseInsensitive
             };
             var ddsFiles = Directory.GetFiles(inputFolder, "*.dds", options);
-        
+
             foreach (var ddsFile in ddsFiles)
             {
                 // Update the status
                 statusCallback($"INFO: Converting {ddsFile}...");
-                        
+
                 // Load the DDS image
                 var ddsTexture = DdsLoader.LoadDdsTexture(ddsFile, statusCallback);
-                
+
                 // Export
                 if (ddsTexture != null)
                 {
+                    string? outputFilePath = null;
+
                     // Build the output file path
-                    var originalFileName = Path.GetFileNameWithoutExtension(ddsFile);
-                    var extension = outputFormat.ToString().ToLower();
-                    var outputFilePath = Path.Combine(outputFolder, $"{originalFileName}.{extension}");
-                    
+                    if (keepFolderStructure)
+                    {
+                        // Determine the relative path
+                        var relativePath = Path.GetRelativePath(inputFolder, ddsFile);
+
+                        // Get the relative directories inbetween
+                        var relativeDir = Path.GetDirectoryName(relativePath);
+
+                        // Create the target directory on the filesystem
+                        var targetDir = string.IsNullOrEmpty(relativeDir)
+                            ? outputFolder
+                            : Path.Combine(outputFolder, relativeDir);
+                        Directory.CreateDirectory(targetDir);
+
+                        // Generate final path
+                        var originalFileName = Path.GetFileNameWithoutExtension(ddsFile);
+                        var extension = outputFormat.ToString().ToLower();
+                        outputFilePath = Path.Combine(targetDir, $"{originalFileName}.{extension}");
+                    }
+                    else
+                    {
+                        var originalFileName = Path.GetFileNameWithoutExtension(ddsFile);
+                        var extension = outputFormat.ToString().ToLower();
+                        outputFilePath = Path.Combine(outputFolder, $"{originalFileName}.{extension}");
+                    }
+
                     switch (outputFormat)
                     {
                         case ExportFormats.PNG:
@@ -72,7 +97,9 @@ public class BatchConvertWizardController(BatchConvertWizardWindow batchConvertW
                     }
                 }
             }
-            statusCallback($"INFO: Finished the batch conversion of {ddsFiles.Length} files in {inputFolder} successfully.");
+
+            statusCallback(
+                $"INFO: Finished the batch conversion of {ddsFiles.Length} files in {inputFolder} successfully.");
         });
     }
 }
