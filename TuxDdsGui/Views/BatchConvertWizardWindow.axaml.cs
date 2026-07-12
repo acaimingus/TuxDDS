@@ -32,7 +32,16 @@ public partial class BatchConvertWizardWindow : Window
 
     private void EvaluatePropertyChanges()
     {
+        // Check if the convert button is enabled
         BtnConvert.IsEnabled = IsConvertEnabled();
+        // Check if naming strategy can be selected
+        RbKeepName.IsEnabled = IsNamingEnabled();
+        RbAppendName.IsEnabled =  IsNamingEnabled();
+        TbAppendName.IsEnabled = IsNamingEnabled();
+        LblAppendNameHint.IsEnabled = IsNamingEnabled();
+        RbBatchRename.IsEnabled = IsNamingEnabled();
+        TbBatchRename.IsEnabled = IsNamingEnabled();
+        LblBatchRenameHint.IsEnabled = IsNamingEnabled();
     }
 
     private async void BtnSelectInputFolderClicked(object? sender, RoutedEventArgs e)
@@ -86,6 +95,17 @@ public partial class BatchConvertWizardWindow : Window
             }
         }
 
+        return true;
+    }
+
+    private bool IsNamingEnabled()
+    {
+        // Check if the output and input directories are set
+        if (string.IsNullOrWhiteSpace(TbInputFolder.Text) || string.IsNullOrWhiteSpace(TbOutputFolder.Text))
+        {
+            return false;
+        }
+        
         return true;
     }
 }
