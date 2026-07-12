@@ -76,11 +76,13 @@ public class BatchConvertWizardController(BatchConvertWizardWindow batchConvertW
                     }
                     else
                     {
+                        // Just put it all in the top directory
                         var originalFileName = Path.GetFileNameWithoutExtension(ddsFile);
                         var extension = outputFormat.ToString().ToLower();
                         outputFilePath = Path.Combine(outputFolder, $"{originalFileName}.{extension}");
                     }
 
+                    // Do the actual export
                     switch (outputFormat)
                     {
                         case ExportFormats.PNG:
