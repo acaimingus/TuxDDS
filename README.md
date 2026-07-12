@@ -9,6 +9,7 @@
 - Add CLI version
 - Add a thumbnailer
 - Add about dialog
+- Add unit testing
 
 ## Supported DDS Formats
 
