@@ -20,6 +20,19 @@ public partial class BatchConvertWizardWindow : Window
 
         CbOutputFormats.ItemsSource = Enum.GetValues<ExportFormats>();
         CbOutputFormats.SelectedIndex = 0;
+        
+        TbInputFolder.TextChanged += (_, _) => EvaluatePropertyChanges();
+        TbOutputFolder.TextChanged += (_, _) => EvaluatePropertyChanges();
+        TbAppendName.TextChanged += (_, _) => EvaluatePropertyChanges();
+        TbBatchRename.TextChanged += (_, _) => EvaluatePropertyChanges();
+        RbKeepName.IsCheckedChanged += (_, _) => EvaluatePropertyChanges();
+        RbAppendName.IsCheckedChanged += (_, _) => EvaluatePropertyChanges();
+        RbBatchRename.IsCheckedChanged += (_, _) => EvaluatePropertyChanges();
+    }
+
+    private void EvaluatePropertyChanges()
+    {
+        BtnConvert.IsEnabled = IsConvertEnabled();
     }
 
     private async void BtnSelectInputFolderClicked(object? sender, RoutedEventArgs e)
@@ -45,5 +58,34 @@ public partial class BatchConvertWizardWindow : Window
         {
             _statusCallback($"ERROR: {exception.Message}");
         }
+    }
+
+    private bool IsConvertEnabled()
+    {
+        // Check if the output and input directories are set
+        if (string.IsNullOrWhiteSpace(TbInputFolder.Text) || string.IsNullOrWhiteSpace(TbOutputFolder.Text))
+        {
+            return false;
+        }
+
+        // If the radio button for appending to the file name is checked, make sure there is an input in the box
+        if (RbAppendName.IsChecked == true)
+        {
+            if (string.IsNullOrWhiteSpace(TbAppendName.Text))
+            {
+                return false;
+            }
+        }
+
+        // If the radio button for batch renaming is enabled, make sure there is an input in the box
+        if (RbBatchRename.IsChecked == true)
+        {
+            if (string.IsNullOrWhiteSpace(TbBatchRename.Text))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

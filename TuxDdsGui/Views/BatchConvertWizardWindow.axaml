@@ -28,12 +28,12 @@
             <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,15" />
             <StackPanel Grid.Row="2" Grid.Column="0">
                 <Label Content="Output name:" />
-                <RadioButton Content="Keep name" IsChecked="True" />
-                <RadioButton Content="Batch rename to: " Margin="0,5,0,0" />
-                <TextBox Width="240" HorizontalAlignment="Left" />
+                <RadioButton Name="RbKeepName" Content="Keep name" IsChecked="True" />
+                <RadioButton Name="RbBatchRename" Content="Batch rename to: " Margin="0,5,0,0" />
+                <TextBox Name="TbBatchRename" Width="240" HorizontalAlignment="Left" />
                 <Label Content="path/to/file/file1.dds" Foreground="Gray" FontSize="11" />
-                <RadioButton Content="Append to name: " Margin="0,5,0,0" />
-                <TextBox Width="240" HorizontalAlignment="Left" />
+                <RadioButton Name="RbAppendName" Content="Append to name: " Margin="0,5,0,0" />
+                <TextBox Name="TbAppendName" Width="240" HorizontalAlignment="Left" />
                 <Label Content="path/to/file/file1-append.dds" Foreground="Gray" FontSize="11" />
             </StackPanel>
             <StackPanel Grid.Row="2" Grid.Column="2">
@@ -41,7 +41,7 @@
                 <ComboBox Name="CbOutputFormats" Width="240" />
             </StackPanel>
             <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,15" />
-            <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
+            <Button Name="BtnConvert" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
                     Content="Convert"
                     VerticalContentAlignment="Center"
                     HorizontalContentAlignment="Center"
