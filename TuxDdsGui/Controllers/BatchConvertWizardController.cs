@@ -1,18 +1,23 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
+using Microsoft.Extensions.Logging;
 using TuxDdsGui.Views;
 using TuxDDSLib.Dds;
 using TuxDdsLib.Export;
 
 namespace TuxDdsGui.Controllers;
 
-public class BatchConvertWizardController(BatchConvertWizardWindow batchConvertWizardWindow)
+public class BatchConvertWizardController
 {
-    private readonly BatchConvertWizardWindow _batchConvertWizardWindow = batchConvertWizardWindow;
-
+    private readonly BatchConvertWizardWindow _batchConvertWizardWindow;
+    
+    public BatchConvertWizardController(BatchConvertWizardWindow batchConvertWizardWindow)
+    {
+        _batchConvertWizardWindow = batchConvertWizardWindow;
+    }
+    
     public async Task<string> PickFolder(string windowTitle)
     {
         // Open a folder picker
@@ -28,8 +33,7 @@ public class BatchConvertWizardController(BatchConvertWizardWindow batchConvertW
     }
 
     public static async Task BatchConvert(string inputFolder, string outputFolder, bool recursiveSearch,
-        bool keepFolderStructure,
-        ExportFormats outputFormat, Action<string> statusCallback, NamingStrategies namingStrategy, string? namingString)
+        bool keepFolderStructure, ExportFormats outputFormat, ILogger? logger, NamingStrategies namingStrategy, string? namingString)
     {
         await Task.Run(() =>
         {
@@ -47,10 +51,10 @@ public class BatchConvertWizardController(BatchConvertWizardWindow batchConvertW
             foreach (var ddsFile in ddsFiles)
             {
                 // Update the status
-                statusCallback($"INFO: Converting {ddsFile}...");
-
+                logger?.LogInformation("Converting {DdsFile}...", ddsFile);
+                
                 // Load the DDS image
-                var ddsTexture = DdsLoader.LoadDdsTexture(ddsFile, statusCallback);
+                var ddsTexture = DdsLoader.LoadDdsTexture(ddsFile, logger);
                 
                 // Export
                 if (ddsTexture != null)
@@ -105,21 +109,20 @@ public class BatchConvertWizardController(BatchConvertWizardWindow batchConvertW
                     {
                         case ExportFormats.PNG:
                             Exporter.ExportToPng(outputFilePath, ddsTexture.PreviewImageData,
-                                ddsTexture.Width, ddsTexture.Height, statusCallback);
+                                ddsTexture.Width, ddsTexture.Height, logger);
                             break;
                         case ExportFormats.JPG:
                             Exporter.ExportToJpg(outputFilePath, ddsTexture.PreviewImageData,
-                                ddsTexture.Width, ddsTexture.Height, statusCallback);
+                                ddsTexture.Width, ddsTexture.Height, logger);
                             break;
                         default:
-                            statusCallback($"ERROR: Selected invalid export format: {outputFormat.ToString()}");
+                            logger?.LogError("Selected invalid export format: {OutputFormat}", outputFormat);
                             return;
                     }
                 }
             }
 
-            statusCallback(
-                $"INFO: Finished the batch conversion of {ddsFiles.Length} files in {inputFolder} successfully.");
+            logger?.LogInformation("Finished the batch conversion of {FileCount} files in {InputFolder} successfully.", ddsFiles.Length, inputFolder);
         });
     }
 }

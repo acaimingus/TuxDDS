@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Microsoft.Extensions.Logging;
 using TuxDdsGui.Controllers;
 using TuxDdsLib.Export;
 
@@ -10,13 +11,13 @@ namespace TuxDdsGui.Views;
 public partial class BatchConvertWizardWindow : Window
 {
     private readonly BatchConvertWizardController _batchConvertWizardController;
-    private readonly Action<string> _statusCallback;
+    private readonly ILogger _logger;
 
-    public BatchConvertWizardWindow(Action<string> statusCallback)
+    public BatchConvertWizardWindow(ILogger logger)
     {
         InitializeComponent();
 
-        _statusCallback = statusCallback;
+        _logger = logger;
         _batchConvertWizardController = new BatchConvertWizardController(this);
 
         CbOutputFormats.ItemsSource = Enum.GetValues<ExportFormats>();
@@ -64,7 +65,7 @@ public partial class BatchConvertWizardWindow : Window
         }
         catch (Exception exception)
         {
-            _statusCallback($"ERROR: {exception.Message}");
+            _logger.LogError(exception, "Failed to select input folder");
         }
     }
 
@@ -76,7 +77,7 @@ public partial class BatchConvertWizardWindow : Window
         }
         catch (Exception exception)
         {
-            _statusCallback($"ERROR: {exception.Message}");
+            _logger.LogError(exception, "Failed to select output folder");
         }
     }
 
@@ -99,19 +100,19 @@ public partial class BatchConvertWizardWindow : Window
                     {
                         // Start the batch conversion
                         _ = BatchConvertWizardController.BatchConvert(TbInputFolder.Text, TbOutputFolder.Text,
-                            recursive, keepFolders, selectedFormat, _statusCallback, NamingStrategies.KeepName, null);
+                            recursive, keepFolders, selectedFormat, _logger, NamingStrategies.KeepName, null);
                     }
                     if (RbBatchRename.IsChecked == true)
                     {
                         // Start the batch conversion
                         _ = BatchConvertWizardController.BatchConvert(TbInputFolder.Text, TbOutputFolder.Text,
-                            recursive, keepFolders, selectedFormat, _statusCallback, NamingStrategies.BatchRename, TbBatchRename.Text);
+                            recursive, keepFolders, selectedFormat, _logger, NamingStrategies.BatchRename, TbBatchRename.Text);
                     }
                     if (RbAppendName.IsChecked == true)
                     {
                         // Start the batch conversion
                         _ = BatchConvertWizardController.BatchConvert(TbInputFolder.Text, TbOutputFolder.Text,
-                            recursive, keepFolders, selectedFormat, _statusCallback, NamingStrategies.Append, TbAppendName.Text);
+                            recursive, keepFolders, selectedFormat, _logger, NamingStrategies.Append, TbAppendName.Text);
                     }
                     
                     // Close the wizard
@@ -119,17 +120,17 @@ public partial class BatchConvertWizardWindow : Window
                 }
                 else
                 {
-                    _statusCallback("ERROR: The input/output path was empty.");
+                    _logger.LogError("The input/output path was empty.");
                 }
             }
             else
             {
-                _statusCallback("ERROR: The selected output format was invalid?");
+                _logger.LogError("The selected output format was invalid.");
             }
         }
         catch (Exception exception)
         {
-            _statusCallback($"ERROR: {exception.Message}");
+            _logger.LogError(exception, "An error occurred during conversion setup");
         }
     }
 
@@ -139,27 +140,18 @@ public partial class BatchConvertWizardWindow : Window
     /// <returns>True, if the button should be enabled, else False</returns>
     private bool IsConvertEnabled()
     {
-        if (!ValidatePaths())
-        {
-            return false;
-        }
+        if (!ValidatePaths()) return false;
 
         // If the radio button for appending to the file name is checked, make sure there is an input in the box
         if (RbAppendName.IsChecked == true)
         {
-            if (string.IsNullOrWhiteSpace(TbAppendName.Text))
-            {
-                return false;
-            }
+            if (string.IsNullOrWhiteSpace(TbAppendName.Text)) return false;
         }
 
         // If the radio button for batch renaming is enabled, make sure there is an input in the box
         if (RbBatchRename.IsChecked == true)
         {
-            if (string.IsNullOrWhiteSpace(TbBatchRename.Text))
-            {
-                return false;
-            }
+            if (string.IsNullOrWhiteSpace(TbBatchRename.Text)) return false;
         }
 
         return true;

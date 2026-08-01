@@ -1,6 +1,7 @@
-namespace TuxDdsLib.Export;
-
+using Microsoft.Extensions.Logging;
 using StbImageWriteSharp;
+
+namespace TuxDdsLib.Export;
 
 /// <summary>
 /// Class for handling the export of the loaded DDS image to various export formats.
@@ -15,9 +16,9 @@ public static class Exporter
     /// are correct (R8G8B8A8)</param>
     /// <param name="imageWidth">Width of the given image</param>
     /// <param name="imageHeight">Height of the given image</param>
-    /// <param name="statusCallback">Status callback for relaying error messages</param>
+    /// <param name="logger">Logger for relaying error messages</param>
     public static void ExportToPng(string outputFilePath, byte[] imageData, int imageWidth, int imageHeight,
-        Action<string> statusCallback)
+        ILogger? logger = null)
     {
         try
         {
@@ -26,12 +27,12 @@ public static class Exporter
             var writer = new ImageWriter();
 
             writer.WritePng(imageData, imageWidth, imageHeight, ColorComponents.RedGreenBlueAlpha, stream);
-            statusCallback($"INFO: Export to {outputFilePath} as .PNG was successful!");
+            logger?.LogInformation("Export to {OutputFilePath} as .PNG was successful!", outputFilePath);
         }
         catch (Exception exception)
         {
             // Update the status message and return
-            statusCallback($"ERROR: Exporting the image failed: {exception.Message}");
+            logger?.LogError("Exporting the image failed: {ExceptionMessage}", exception.Message);
         }
     }
 
@@ -43,9 +44,9 @@ public static class Exporter
     /// are correct (R8G8B8A8)</param>
     /// <param name="imageWidth">Width of the given image</param>
     /// <param name="imageHeight">Height of the given image</param>
-    /// <param name="statusCallback">Status callback for relaying error messages</param>
+    /// <param name="logger">Logger for relaying error messages</param>
     public static void ExportToJpg(string outputFilePath, byte[] imageData, int imageWidth, int imageHeight,
-        Action<string> statusCallback)
+        ILogger? logger = null)
     {
         // This method could be reduced by the DRY-principle, but I am not going to so there won't be any dependencies
         // introduced between exporting PNG and JPG images
@@ -58,12 +59,12 @@ public static class Exporter
 
             // Use 100% quality always
             writer.WriteJpg(imageData, imageWidth, imageHeight, ColorComponents.RedGreenBlueAlpha, stream, 100);
-            statusCallback($"INFO: Export to {outputFilePath} as .JPG was successful!");
+            logger?.LogInformation("Export to {OutputFilePath} as .JPG was successful!", outputFilePath);
         }
         catch (Exception exception)
         {
             // Update the status message and return
-            statusCallback($"ERROR: Exporting the image failed: {exception.Message}");
+            logger?.LogError("Exporting the image failed: {ExceptionMessage}", exception.Message);
         }
     }
 }

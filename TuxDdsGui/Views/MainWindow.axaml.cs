@@ -2,7 +2,9 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using Microsoft.Extensions.Logging;
 using TuxDdsGui.Controllers;
+using TuxDdsGui.Logging;
 using TuxDdsLib.Export;
 
 namespace TuxDdsGui.Views;
@@ -16,15 +18,22 @@ public partial class MainWindow : Window
     /// Controller for this view class
     /// </summary>
     private readonly MainWindowController _mainWindowController;
+    private readonly ILoggerFactory _loggerFactory;
     
     /// <summary>
     /// Constructor
     /// </summary>
     public MainWindow()
     {
-        _mainWindowController = new MainWindowController(this);
-        
         InitializeComponent();
+
+        _loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder.AddProvider(new TuxLoggerGuiProvider(UpdateApplicationStatus));
+        });
+
+        var logger = _loggerFactory.CreateLogger<MainWindowController>();
+        _mainWindowController = new MainWindowController(this, logger);
     }
 
     /// <summary>
@@ -51,7 +60,7 @@ public partial class MainWindow : Window
     /// <param name="writeableBitmap">Bitmap to be displayed</param>
     private void DisplayDdsImage(WriteableBitmap writeableBitmap)
     {
-        ImgDdsTexture.Source =  writeableBitmap;
+        ImgDdsTexture.Source = writeableBitmap;
         ToggleNoImage(false);
     }
     
@@ -82,7 +91,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            await _mainWindowController.OpenDdsImage(UpdateApplicationStatus, DisplayDdsImage, SetWindowTitle);
+            await _mainWindowController.OpenDdsImage(DisplayDdsImage, SetWindowTitle);
         }
         catch (Exception exception)
         {
@@ -99,7 +108,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            await _mainWindowController.ExportImage(ExportFormats.PNG, UpdateApplicationStatus);
+            await _mainWindowController.ExportImage(ExportFormats.PNG);
         }
         catch (Exception exception)
         {
@@ -116,7 +125,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            await _mainWindowController.ExportImage(ExportFormats.JPG, UpdateApplicationStatus);
+            await _mainWindowController.ExportImage(ExportFormats.JPG);
         }
         catch (Exception exception)
         {
@@ -133,7 +142,8 @@ public partial class MainWindow : Window
     {
         try
         {
-            var batchConvertWizardWindow = new BatchConvertWizardWindow(UpdateApplicationStatus);
+            var wizardLogger = _loggerFactory.CreateLogger<BatchConvertWizardWindow>();
+            var batchConvertWizardWindow = new BatchConvertWizardWindow(wizardLogger);
             await batchConvertWizardWindow.ShowDialog(this);
         }
         catch (Exception exception)
