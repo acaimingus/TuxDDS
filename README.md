@@ -2,13 +2,13 @@
 
 ## TODO
 
-- Refine error handling/logging
-- Add zooming and dragging in the image preview
 - Add DDS export in another format
 - Add CLI version
 - Add a thumbnailer
 - Add about dialog
 - Add unit testing
+- Adjust code to styleguide
+- Create README
 
 ## Supported DDS Formats
 
