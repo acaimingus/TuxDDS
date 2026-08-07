@@ -27,19 +27,24 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        // Create the logger
         _loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddProvider(new TuxLoggerGuiProvider(UpdateApplicationStatus));
         });
-
         var logger = _loggerFactory.CreateLogger<MainWindowController>();
+        
+        // Set the controller for this view and give it a logger
         _mainWindowController = new MainWindowController(this, logger);
+        
+        // Log the first message
+        logger.LogInformation("Welcome to TuxDDS!");
     }
 
     /// <summary>
     /// Callback method for setting the window title, used for displaying the currently open image in the title bar
     /// </summary>
-    /// <param name="title"></param>
+    /// <param name="title">Title to set for the window</param>
     private void SetWindowTitle(string title)
     {
         Title = $"TuxDDS - {title}";

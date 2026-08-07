@@ -27,11 +27,15 @@ public class TuxLoggerGuiProvider : ILoggerProvider
             Directory.CreateDirectory(logDir!);
         }
 
-        // Open the streamWriter once
-        _streamWriter = new StreamWriter(_logFilePath, append: true)
+        // Open the streamWriter once and overwrite existing log on startup
+        _streamWriter = new StreamWriter(_logFilePath, append: false)
         {
             AutoFlush = true
         };
+        
+        // Write the header for the log file
+        _streamWriter.WriteLine($"=== TuxDds.log ({DateTime.Now}) ===");
+        _streamWriter.WriteLine("");
     }
 
     public ILogger CreateLogger(string categoryName)
