@@ -6,6 +6,7 @@ build/
 # Exclude C# build artifacts
 bin/
 obj/
+.dotnet_home/
 
 # Exclude editor config files
 .idea/
