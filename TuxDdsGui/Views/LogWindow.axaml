@@ -5,6 +5,7 @@
         mc:Ignorable="d"
         x:Class="TuxDdsGui.Views.LogWindow"
         Title="TuxDDS - Log"
+        Width="600" Height="600"
         WindowStartupLocation="CenterOwner">
     <Grid RowDefinitions="*">
         <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
