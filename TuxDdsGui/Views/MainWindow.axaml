@@ -7,7 +7,7 @@
         Title="TuxDDS"
         Width="480" Height="240">
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
+        <Menu DockPanel.Dock="Top" Background="DimGray">
             <MenuItem Header="_Open" Name="MiOpenDdsImage" Click="OnMiOpenDdsImageClick" />
             <MenuItem Header="_Export">
                 <MenuItem Header="_PNG" Name="MiExportToPng" Click="OnMiExportToPngClick" />
@@ -17,30 +17,60 @@
             <MenuItem Header="_Log" Name="MiLog" Click="OnMiLogClick" />
             <MenuItem Header="_About" />
         </Menu>
-        <Border DockPanel.Dock="Bottom" Padding="10,6">
+        <Border DockPanel.Dock="Bottom" Padding="10,6" Background="DimGray">
             <TextBlock Name="SbApplicationStatus" />
         </Border>
-        <Panel Name="StkWindowContent">
-            <TextBlock Name="LblNoImage"
-                       Text="No image loaded."
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center" />
-            <Border HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Gray" BorderThickness="1" Margin="5">
-                <Border.Background>
-                    <DrawingBrush TileMode="Tile" DestinationRect="0,0,20,20">
-                        <DrawingBrush.Drawing>
-                            <DrawingGroup>
-                                <GeometryDrawing Brush="#E5E5E5" Geometry="M 0,0 L 20,0 L 20,20 L 0,20 Z" />
-                                <GeometryDrawing Brush="#B3B3B3" Geometry="M 0,0 L 10,0 L 10,10 L 0,10 Z" />
-                                <GeometryDrawing Brush="#B3B3B3" Geometry="M 10,10 L 20,10 L 20,20 L 10,20 Z" />
-                            </DrawingGroup>
-                        </DrawingBrush.Drawing>
-                    </DrawingBrush>
-                </Border.Background>
-                <Image Name="ImgDdsTexture"
-                       IsVisible="False"
-                       Stretch="Uniform" />
-            </Border>
+        <Panel Name="SvPreview"
+               Background="Transparent"
+               ClipToBounds="True"
+               PointerWheelChanged="OnPreviewPointerWheelChanged"
+               PointerPressed="OnPreviewPointerPressed"
+               PointerMoved="OnPreviewPointerMoved"
+               PointerReleased="OnPreviewPointerReleased">
+            <Panel Name="StkWindowContent" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Name="LblNoImage"
+                           Text="No image loaded."
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                <Border Name="ImgBorder"
+                        IsVisible="False"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        Margin="5">
+                    <Border.Background>
+                        <DrawingBrush TileMode="Tile" DestinationRect="0,0,20,20">
+                            <DrawingBrush.Drawing>
+                                <DrawingGroup>
+                                    <GeometryDrawing Brush="#E5E5E5" Geometry="M 0,0 L 20,0 L 20,20 L 0,20 Z" />
+                                    <GeometryDrawing Brush="#B3B3B3" Geometry="M 0,0 L 10,0 L 10,10 L 0,10 Z" />
+                                    <GeometryDrawing Brush="#B3B3B3" Geometry="M 10,10 L 20,10 L 20,20 L 10,20 Z" />
+                                </DrawingGroup>
+                            </DrawingBrush.Drawing>
+                        </DrawingBrush>
+                    </Border.Background>
+                    <Image Name="ImgDdsTexture" Stretch="None" />
+                </Border>
+            </Panel>
+            <TextBlock Text="Mouse wheel: Zoom | Left click (Drag): Pan view | Middle click: Reset"
+                       Name="TbControlHint"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Bottom"
+                       Margin="10"
+                       Opacity="0.7"
+                       FontSize="11"
+                       IsHitTestVisible="False"
+                       IsVisible="False" />
+            <TextBlock Text="Zoom: x1.0"
+                       Name="TbZoomFactor"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Bottom"
+                       Margin="10"
+                       Opacity="0.7"
+                       FontSize="11"
+                       IsHitTestVisible="False"
+                       IsVisible="False" />
         </Panel>
     </DockPanel>
 </Window>

@@ -1,6 +1,9 @@
 using System;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Microsoft.Extensions.Logging;
 using TuxDdsGui.Controllers;
@@ -19,7 +22,14 @@ public partial class MainWindow : Window
     /// </summary>
     private readonly MainWindowController _mainWindowController;
     private readonly ILoggerFactory _loggerFactory;
-    private readonly ILogger<MainWindowController> logger;
+    private readonly ILogger<MainWindowController> _logger;
+
+    private readonly ScaleTransform _imgScaleTransform = new(1.0, 1.0);
+    private readonly TranslateTransform _imgTranslateTransform = new(0, 0);
+    private double _zoomFactor = 1.0;
+    private Vector _panPosition = new(0, 0);
+    private Point _lastPointerPosition;
+    private bool _isPanning;
     
     /// <summary>
     /// Constructor
@@ -28,18 +38,23 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        var transformGroup = new TransformGroup();
+        transformGroup.Children.Add(_imgScaleTransform);
+        transformGroup.Children.Add(_imgTranslateTransform);
+        ImgBorder.RenderTransform = transformGroup;
+
         // Create the logger
         _loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddProvider(new TuxLoggerGuiProvider(UpdateApplicationStatus));
         });
-        logger = _loggerFactory.CreateLogger<MainWindowController>();
+        _logger = _loggerFactory.CreateLogger<MainWindowController>();
         
         // Set the controller for this view and give it a logger
-        _mainWindowController = new MainWindowController(this, logger);
+        _mainWindowController = new MainWindowController(this, _logger);
         
         // Log the first message
-        logger.LogInformation("Welcome to TuxDDS!");
+        _logger.LogInformation("Welcome to TuxDDS!");
     }
 
     /// <summary>
@@ -67,6 +82,7 @@ public partial class MainWindow : Window
     private void DisplayDdsImage(WriteableBitmap writeableBitmap)
     {
         ImgDdsTexture.Source = writeableBitmap;
+        ResetZoomAndScroll();
         ToggleNoImage(false);
     }
     
@@ -79,13 +95,128 @@ public partial class MainWindow : Window
         if (toggle)
         {
             LblNoImage.IsVisible = true;
-            ImgDdsTexture.IsVisible = false;
+            ImgBorder.IsVisible = false;
+            TbControlHint.IsVisible = false;
+            TbZoomFactor.IsVisible = false;
         }
         else
         {
             LblNoImage.IsVisible = false;
-            ImgDdsTexture.IsVisible = true;
+            ImgBorder.IsVisible = true;
+            TbControlHint.IsVisible = true;
+            TbZoomFactor.IsVisible = true;
         }
+    }
+
+    private void UpdateZoomText(double zoomValue)
+    {
+        var truncated = Math.Round(zoomValue, 1, MidpointRounding.ToZero);
+        TbZoomFactor.Text = $"Zoom: x{truncated}";
+    }
+
+    /// <summary>
+    /// Event handler for zooming via mouse wheel.
+    /// </summary>
+    private void OnPreviewPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        if (!ImgBorder.IsVisible) return;
+
+        var zoomDelta = e.Delta.Y > 0 ? 1.15 : (1.0 / 1.15);
+        var oldZoom = _zoomFactor;
+        var newZoom = Math.Clamp(_zoomFactor * zoomDelta, 0.1, 50.0);
+
+        if (Math.Abs(newZoom - oldZoom) < 0.001) return;
+
+        var mousePos = e.GetPosition(StkWindowContent);
+        var scaleRatio = newZoom / oldZoom;
+
+        _panPosition = new Vector(
+            mousePos.X - (mousePos.X - _panPosition.X) * scaleRatio,
+            mousePos.Y - (mousePos.Y - _panPosition.Y) * scaleRatio
+        );
+
+        UpdateZoomText(newZoom);
+        
+        _zoomFactor = newZoom;
+        _imgScaleTransform.ScaleX = _zoomFactor;
+        _imgScaleTransform.ScaleY = _zoomFactor;
+        _imgTranslateTransform.X = _panPosition.X;
+        _imgTranslateTransform.Y = _panPosition.Y;
+
+        e.Handled = true;
+    }
+
+    /// <summary>
+    /// Event handler for pressing pointer (start drag-pan or middle-click to reset zoom).
+    /// </summary>
+    private void OnPreviewPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (!ImgBorder.IsVisible) return;
+
+        var properties = e.GetCurrentPoint(SvPreview).Properties;
+
+        if (properties.IsMiddleButtonPressed)
+        {
+            ResetZoomAndScroll();
+            e.Handled = true;
+            return;
+        }
+
+        if (properties.IsLeftButtonPressed)
+        {
+            _isPanning = true;
+            _lastPointerPosition = e.GetPosition(SvPreview);
+            e.Pointer.Capture(SvPreview);
+            e.Handled = true;
+        }
+    }
+
+    /// <summary>
+    /// Event handler for moving pointer during drag-pan.
+    /// </summary>
+    private void OnPreviewPointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (!_isPanning) return;
+
+        var currentPosition = e.GetPosition(SvPreview);
+        var delta = currentPosition - _lastPointerPosition;
+        _lastPointerPosition = currentPosition;
+
+        _panPosition = new Vector(
+            _panPosition.X + delta.X,
+            _panPosition.Y + delta.Y
+        );
+
+        _imgTranslateTransform.X = _panPosition.X;
+        _imgTranslateTransform.Y = _panPosition.Y;
+        e.Handled = true;
+    }
+
+    /// <summary>
+    /// Event handler for releasing pointer (end drag-pan).
+    /// </summary>
+    private void OnPreviewPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (_isPanning)
+        {
+            _isPanning = false;
+            e.Pointer.Capture(null);
+            e.Handled = true;
+        }
+    }
+
+    /// <summary>
+    /// Resets the zoom level to 100% and pan position to 0,0.
+    /// </summary>
+    private void ResetZoomAndScroll()
+    {
+        _zoomFactor = 1.0;
+        UpdateZoomText(_zoomFactor);
+        _panPosition = new Vector(0, 0);
+        _imgScaleTransform.ScaleX = 1.0;
+        _imgScaleTransform.ScaleY = 1.0;
+        _imgTranslateTransform.X = 0;
+        _imgTranslateTransform.Y = 0;
     }
 
     /// <summary>
@@ -101,7 +232,7 @@ public partial class MainWindow : Window
         }
         catch (Exception exception)
         {
-            logger.LogError("{ExceptionMessage}", exception.Message);
+            _logger.LogError("{ExceptionMessage}", exception.Message);
         }
     }
 
@@ -118,7 +249,7 @@ public partial class MainWindow : Window
         }
         catch (Exception exception)
         {
-            logger.LogError("{ExceptionMessage}", exception.Message);
+            _logger.LogError("{ExceptionMessage}", exception.Message);
         }
     }
     
@@ -135,7 +266,7 @@ public partial class MainWindow : Window
         }
         catch (Exception exception)
         {
-            logger.LogError("{ExceptionMessage}", exception.Message);
+            _logger.LogError("{ExceptionMessage}", exception.Message);
         }
     }
     
@@ -154,7 +285,7 @@ public partial class MainWindow : Window
         }
         catch (Exception exception)
         {
-            logger.LogError("{ExceptionMessage}", exception.Message);
+            _logger.LogError("{ExceptionMessage}", exception.Message);
         }
     }
 
