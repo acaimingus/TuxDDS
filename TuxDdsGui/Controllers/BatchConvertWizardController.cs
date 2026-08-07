@@ -12,12 +12,12 @@ namespace TuxDdsGui.Controllers;
 public class BatchConvertWizardController
 {
     private readonly BatchConvertWizardWindow _batchConvertWizardWindow;
-    
+
     public BatchConvertWizardController(BatchConvertWizardWindow batchConvertWizardWindow)
     {
         _batchConvertWizardWindow = batchConvertWizardWindow;
     }
-    
+
     public async Task<string> PickFolder(string windowTitle)
     {
         // Open a folder picker
@@ -33,7 +33,8 @@ public class BatchConvertWizardController
     }
 
     public static async Task BatchConvert(string inputFolder, string outputFolder, bool recursiveSearch,
-        bool keepFolderStructure, ExportFormats outputFormat, ILogger? logger, NamingStrategies namingStrategy, string? namingString)
+        bool keepFolderStructure, ExportFormats outputFormat, ILogger? logger, NamingStrategies namingStrategy,
+        string? namingString)
     {
         await Task.Run(() =>
         {
@@ -47,22 +48,22 @@ public class BatchConvertWizardController
 
             // Counter for the batch renaming strategy
             var batchRenameIndex = 1;
-            
+
             foreach (var ddsFile in ddsFiles)
             {
                 // Update the status
                 logger?.LogInformation("Converting {DdsFile}...", ddsFile);
-                
+
                 // Load the DDS image
                 var ddsTexture = DdsLoader.LoadDdsTexture(ddsFile, logger);
-                
+
                 // Export
                 if (ddsTexture != null)
                 {
                     string? outputFilePath;
-                    
+
                     // Rename the files based on the naming strategy
-                    var baseFileName =  Path.GetFileNameWithoutExtension(ddsFile);
+                    var baseFileName = Path.GetFileNameWithoutExtension(ddsFile);
                     switch (namingStrategy)
                     {
                         case NamingStrategies.BatchRename:
@@ -77,9 +78,9 @@ public class BatchConvertWizardController
                             // Keep the default baseFileName
                             break;
                     }
-                    
+
                     var extension = outputFormat.ToString().ToLower();
-                    
+
                     // Build the output file path
                     if (keepFolderStructure)
                     {
@@ -103,7 +104,7 @@ public class BatchConvertWizardController
                         // Just put it all in the top directory
                         outputFilePath = Path.Combine(outputFolder, $"{baseFileName}.{extension}");
                     }
-                    
+
                     // Do the actual export
                     switch (outputFormat)
                     {
@@ -122,7 +123,9 @@ public class BatchConvertWizardController
                 }
             }
 
-            logger?.LogInformation("Finished the batch conversion of {FileCount} files in {InputFolder} successfully.", ddsFiles.Length, inputFolder);
+            logger?.LogInformation(
+                "Finished the batch conversion of {FileCount} files in {InputFolder} successfully. Check the log for details.",
+                ddsFiles.Length, inputFolder);
         });
     }
 }

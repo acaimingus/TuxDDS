@@ -95,6 +95,8 @@ public partial class BatchConvertWizardWindow : Window
                 // Check if the paths are not empty
                 if (TbInputFolder.Text != null && TbOutputFolder.Text != null)
                 {
+                    _logger.LogInformation("Starting the batch conversion...");
+                    
                     // Get the selected naming strategy
                     if (RbKeepName.IsChecked == true)
                     {

@@ -9,26 +9,20 @@ public class TuxLoggerGuiProvider : ILoggerProvider
 {
     private readonly Action<string> _logCallback;
     private readonly StreamWriter _streamWriter;
-    
-    // Path for the log file of the application
-    private readonly string _logFilePath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), 
-        "TuxDds", 
-        "TuxDds.log");
 
     public TuxLoggerGuiProvider(Action<string> logCallback)
     {
         _logCallback = logCallback;
 
         // Check if the directory exists before writing to it
-        var logDir = Path.GetDirectoryName(_logFilePath);
+        var logDir = Path.GetDirectoryName(TuxLogger.LogFilePath);
         if (!Directory.Exists(logDir))
         {
             Directory.CreateDirectory(logDir!);
         }
 
         // Open the streamWriter once and overwrite existing log on startup
-        _streamWriter = new StreamWriter(_logFilePath, append: false)
+        _streamWriter = new StreamWriter(TuxLogger.LogFilePath, append: false)
         {
             AutoFlush = true
         };

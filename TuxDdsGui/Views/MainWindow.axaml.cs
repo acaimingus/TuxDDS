@@ -19,6 +19,7 @@ public partial class MainWindow : Window
     /// </summary>
     private readonly MainWindowController _mainWindowController;
     private readonly ILoggerFactory _loggerFactory;
+    private readonly ILogger<MainWindowController> logger;
     
     /// <summary>
     /// Constructor
@@ -32,7 +33,7 @@ public partial class MainWindow : Window
         {
             builder.AddProvider(new TuxLoggerGuiProvider(UpdateApplicationStatus));
         });
-        var logger = _loggerFactory.CreateLogger<MainWindowController>();
+        logger = _loggerFactory.CreateLogger<MainWindowController>();
         
         // Set the controller for this view and give it a logger
         _mainWindowController = new MainWindowController(this, logger);
@@ -100,7 +101,7 @@ public partial class MainWindow : Window
         }
         catch (Exception exception)
         {
-            UpdateApplicationStatus($"ERROR: {exception.Message}");
+            logger.LogError("{ExceptionMessage}", exception.Message);
         }
     }
 
@@ -117,7 +118,7 @@ public partial class MainWindow : Window
         }
         catch (Exception exception)
         {
-            UpdateApplicationStatus($"ERROR: {exception.Message}");
+            logger.LogError("{ExceptionMessage}", exception.Message);
         }
     }
     
@@ -134,7 +135,7 @@ public partial class MainWindow : Window
         }
         catch (Exception exception)
         {
-            UpdateApplicationStatus($"ERROR: {exception.Message}");
+            logger.LogError("{ExceptionMessage}", exception.Message);
         }
     }
     
@@ -153,7 +154,13 @@ public partial class MainWindow : Window
         }
         catch (Exception exception)
         {
-            UpdateApplicationStatus($"ERROR: {exception.Message}");
+            logger.LogError("{ExceptionMessage}", exception.Message);
         }
+    }
+
+    private void OnMiLogClick(object? sender, RoutedEventArgs e)
+    {
+        var logWindow = new LogWindow();
+        logWindow.Show(this);
     }
 }

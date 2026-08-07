@@ -6,6 +6,12 @@ namespace TuxDdsLib.Logging;
 
 public class TuxLogger : ILogger
 {
+    // Path for the log file of the application
+    public static readonly string LogFilePath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), 
+        "TuxDds", 
+        "TuxDds.log");
+    
     private readonly Action<string> _uiLogCallback;
     private readonly string _categoryName;
     private readonly StreamWriter _streamWriter;
