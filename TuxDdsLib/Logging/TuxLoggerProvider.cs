@@ -1,16 +1,13 @@
-using System;
-using System.IO;
 using Microsoft.Extensions.Logging;
-using TuxDdsLib.Logging;
 
-namespace TuxDdsGui.Logging;
+namespace TuxDdsLib.Logging;
 
-public class TuxLoggerGuiProvider : ILoggerProvider
+public class TuxLoggerProvider : ILoggerProvider
 {
     private readonly Action<string> _logCallback;
     private readonly StreamWriter _streamWriter;
 
-    public TuxLoggerGuiProvider(Action<string> logCallback)
+    public TuxLoggerProvider(Action<string> logCallback)
     {
         _logCallback = logCallback;
 
@@ -26,7 +23,7 @@ public class TuxLoggerGuiProvider : ILoggerProvider
         {
             AutoFlush = true
         };
-        
+
         // Write the header for the log file
         _streamWriter.WriteLine($"=== TuxDds.log ({DateTime.Now}) ===");
         _streamWriter.WriteLine("");
@@ -34,7 +31,7 @@ public class TuxLoggerGuiProvider : ILoggerProvider
 
     public ILogger CreateLogger(string categoryName)
     {
-        // Pass the same StreamWriter a new logger when one is created
+        // Pass the same StreamWriter to a new logger when one is created
         return new TuxLogger(_logCallback, categoryName, _streamWriter);
     }
 

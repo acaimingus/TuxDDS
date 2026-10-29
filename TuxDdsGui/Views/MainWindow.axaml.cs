@@ -7,8 +7,8 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Microsoft.Extensions.Logging;
 using TuxDdsGui.Controllers;
-using TuxDdsGui.Logging;
 using TuxDdsLib.Export;
+using TuxDdsLib.Logging;
 
 namespace TuxDdsGui.Views;
 
@@ -46,7 +46,7 @@ public partial class MainWindow : Window
         // Create the logger
         _loggerFactory = LoggerFactory.Create(builder =>
         {
-            builder.AddProvider(new TuxLoggerGuiProvider(UpdateApplicationStatus));
+            builder.AddProvider(new TuxLoggerProvider(UpdateApplicationStatus));
         });
         _logger = _loggerFactory.CreateLogger<MainWindowController>();
         

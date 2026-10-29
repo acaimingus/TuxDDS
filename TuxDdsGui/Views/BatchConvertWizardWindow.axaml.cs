@@ -97,26 +97,35 @@ public partial class BatchConvertWizardWindow : Window
                 {
                     _logger.LogInformation("Starting the batch conversion...");
                     
-                    // Get the selected naming strategy
-                    if (RbKeepName.IsChecked == true)
-                    {
-                        // Start the batch conversion
-                        _ = BatchConvertWizardController.BatchConvert(TbInputFolder.Text, TbOutputFolder.Text,
-                            recursive, keepFolders, selectedFormat, _logger, NamingStrategies.KeepName, null);
-                    }
+                    // Determine the selected naming strategy and string
+                    var namingStrategy = NamingStrategies.KeepName;
+                    string? namingString = null;
+
                     if (RbBatchRename.IsChecked == true)
                     {
-                        // Start the batch conversion
-                        _ = BatchConvertWizardController.BatchConvert(TbInputFolder.Text, TbOutputFolder.Text,
-                            recursive, keepFolders, selectedFormat, _logger, NamingStrategies.BatchRename, TbBatchRename.Text);
+                        namingStrategy = NamingStrategies.BatchRename;
+                        namingString = TbBatchRename.Text;
                     }
-                    if (RbAppendName.IsChecked == true)
+                    else if (RbAppendName.IsChecked == true)
                     {
-                        // Start the batch conversion
-                        _ = BatchConvertWizardController.BatchConvert(TbInputFolder.Text, TbOutputFolder.Text,
-                            recursive, keepFolders, selectedFormat, _logger, NamingStrategies.Append, TbAppendName.Text);
+                        namingStrategy = NamingStrategies.Append;
+                        namingString = TbAppendName.Text;
                     }
-                    
+
+                    var options = new BatchExportOptions
+                    {
+                        InputFolder = TbInputFolder.Text,
+                        OutputFolder = TbOutputFolder.Text,
+                        OutputFormat = selectedFormat,
+                        RecursiveSearch = recursive,
+                        KeepFolderStructure = keepFolders,
+                        NamingStrategy = namingStrategy,
+                        NamingString = namingString
+                    };
+
+                    // Start the batch conversion
+                    _ = BatchConvertWizardController.BatchConvert(options, _logger);
+
                     // Close the wizard
                     Close();
                 }
