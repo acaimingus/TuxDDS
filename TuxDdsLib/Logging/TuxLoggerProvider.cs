@@ -4,10 +4,13 @@ namespace TuxDdsLib.Logging;
 
 public class TuxLoggerProvider : ILoggerProvider
 {
-    private readonly Action<string> _logCallback;
+    private const int MaxLogLines = 1000;
+    private const int TrimToLogLines = 500;
+
+    private readonly Action<string>? _logCallback;
     private readonly StreamWriter _streamWriter;
 
-    public TuxLoggerProvider(Action<string> logCallback)
+    public TuxLoggerProvider(Action<string>? logCallback = null)
     {
         _logCallback = logCallback;
 
@@ -18,15 +21,34 @@ public class TuxLoggerProvider : ILoggerProvider
             Directory.CreateDirectory(logDir!);
         }
 
-        // Open the streamWriter once and overwrite existing log on startup
-        _streamWriter = new StreamWriter(TuxLogger.LogFilePath, append: false)
+        // If the log file exceeds the maximum line count, keep only the newest lines
+        if (File.Exists(TuxLogger.LogFilePath))
+        {
+            var lines = File.ReadAllLines(TuxLogger.LogFilePath);
+            if (lines.Length > MaxLogLines)
+            {
+                var trimmedLines = lines.TakeLast(TrimToLogLines);
+                File.WriteAllLines(TuxLogger.LogFilePath, ["=== TuxDds.log ===", "", ..trimmedLines]);
+            }
+        }
+
+        // Open the streamWriter in append mode
+        var fileStream = new FileStream(
+            TuxLogger.LogFilePath,
+            FileMode.Append,
+            FileAccess.Write,
+            FileShare.ReadWrite);
+        _streamWriter = new StreamWriter(fileStream)
         {
             AutoFlush = true
         };
 
-        // Write the header for the log file
-        _streamWriter.WriteLine($"=== TuxDds.log ({DateTime.Now}) ===");
-        _streamWriter.WriteLine("");
+        // Write the header for the log file if it is empty
+        if (_streamWriter.BaseStream.Length == 0)
+        {
+            _streamWriter.WriteLine("=== TuxDds.log ===");
+            _streamWriter.WriteLine("");
+        }
     }
 
     public ILogger CreateLogger(string categoryName)

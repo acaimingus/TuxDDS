@@ -1,11 +1,22 @@
 using System.Reflection;
+using Microsoft.Extensions.Logging;
+using TuxDdsLib.Logging;
 
 namespace TuxDdsCli;
 
 internal class Program
 {
+    private static ILogger<Program>? _logger;
+
     static int Main(string[] args)
     {
+        // Create the logger
+        using var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder.AddProvider(new TuxLoggerProvider());
+        });
+        _logger = loggerFactory.CreateLogger<Program>();
+
         // Check if the user did not specify any arguments
         if (args.Length <= 0)
         {
@@ -60,6 +71,15 @@ internal class Program
 
     private static int ShowLog()
     {
+        if (!File.Exists(TuxLogger.LogFilePath))
+        {
+            _logger?.LogError("Log file not found at '{LogFilePath}'.", TuxLogger.LogFilePath);
+            Console.WriteLine($"Log file not found at '{TuxLogger.LogFilePath}'.");
+            return 1;
+        }
+
+        _logger?.LogInformation("Displayed log file contents from '{LogFilePath}'.", TuxLogger.LogFilePath);
+        Console.WriteLine(File.ReadAllText(TuxLogger.LogFilePath));
         return 0;
     }
 
@@ -72,6 +92,8 @@ internal class Program
         Console.WriteLine($"TuxDDS CLI v{version}");
         Console.WriteLine(copyright);
         Console.WriteLine("Licensed under the MIT License.");
+
+        _logger?.LogInformation("Displayed about information for TuxDDS CLI v{Version}.", version);
     }
 
     static void ShowHelpInfo()
@@ -84,10 +106,12 @@ internal class Program
     {
         if (string.IsNullOrWhiteSpace(commandArgument))
         {
+            _logger?.LogError("No command specified.");
             Console.WriteLine("No command specified. Please enter a valid command.");
         }
         else
         {
+            _logger?.LogError("Invalid command argument specified: '{CommandArgument}'.", commandArgument);
             Console.WriteLine(
                 $"The argument '{commandArgument}' is not a valid argument. Please enter a valid command.");
         }

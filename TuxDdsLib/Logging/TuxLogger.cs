@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using Microsoft.Extensions.Logging;
 
 namespace TuxDdsLib.Logging;
@@ -12,11 +10,11 @@ public class TuxLogger : ILogger
         "TuxDds",
         "TuxDds.log");
 
-    private readonly Action<string> _uiLogCallback;
+    private readonly Action<string>? _uiLogCallback;
     private readonly string _categoryName;
     private readonly StreamWriter _streamWriter;
 
-    public TuxLogger(Action<string> uiLogCallback, string categoryName, StreamWriter streamWriter)
+    public TuxLogger(Action<string>? uiLogCallback, string categoryName, StreamWriter streamWriter)
     {
         _uiLogCallback = uiLogCallback;
         _categoryName = categoryName;
@@ -34,7 +32,7 @@ public class TuxLogger : ILogger
 
         // Write the log message into the log file
         var message = formatter(state, exception);
-        var formattedLog = $"[{logLevel.ToString().ToUpper()}] {_categoryName}: {message}";
+        var formattedLog = $"[{logLevel.ToString().ToUpper()}][{DateTime.Now}] {_categoryName}: {message}";
 
         // Lock the writer while writing to avoid race conditions
         lock (_streamWriter)
@@ -43,7 +41,7 @@ public class TuxLogger : ILogger
         }
 
         // Log the message to the UI as well
-        _uiLogCallback($"[{logLevel.ToString().ToUpper()}] {message}");
+        _uiLogCallback?.Invoke($"[{logLevel.ToString().ToUpper()}] {message}");
     }
 
     public bool IsEnabled(LogLevel logLevel)
