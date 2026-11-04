@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.Extensions.Logging;
+using TuxDDSLib.Dds;
 using TuxDdsLib.Logging;
 
 namespace TuxDdsCli;
@@ -56,6 +57,37 @@ internal class Program
 
     private static int ShowImageInfo(string[] args)
     {
+        if (args.Length <= 0 || string.IsNullOrWhiteSpace(args[0]))
+        {
+            _logger?.LogError("No file path specified for the 'info' command.");
+            Console.WriteLine("No file path specified. Please provide a path to a DDS file.");
+            return 1;
+        }
+
+        var filePath = args[0];
+
+        if (!filePath.EndsWith(".dds", StringComparison.OrdinalIgnoreCase))
+        {
+            _logger?.LogError("The specified file is not a DDS file: '{FilePath}'.", filePath);
+            Console.WriteLine($"The specified file '{filePath}' is not a DDS file.");
+            return 1;
+        }
+
+        var ddsTexture = DdsLoader.LoadDdsTexture(filePath, _logger);
+        if (ddsTexture == null)
+        {
+            Console.WriteLine($"Failed to read DDS image '{filePath}'. Check the log for details.");
+            return 1;
+        }
+
+        Console.WriteLine($"File Name:      {ddsTexture.FileName}");
+        Console.WriteLine($"File Path:      {Path.GetFullPath(ddsTexture.Path)}");
+        Console.WriteLine($"Dimensions:     {ddsTexture.Width} x {ddsTexture.Height} px");
+        Console.WriteLine($"Format:         {ddsTexture.ImageFormat}");
+        Console.WriteLine($"Bits per Pixel: {ddsTexture.BitsPerPixel}");
+        Console.WriteLine($"Bits per Color: {ddsTexture.BitsPerColor}");
+
+        _logger?.LogInformation("Displayed image information for '{FilePath}'.", filePath);
         return 0;
     }
 

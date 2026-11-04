@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Include="lib\libDirectXTexWrapper.so" Link="runtimes\linux-x64\native\libDirectXTexWrapper.so">
+        <Content Include="lib\libDirectXTexWrapper.so" Link="libDirectXTexWrapper.so">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
