@@ -2,7 +2,7 @@ using System.Reflection;
 
 namespace TuxDdsCli;
 
-class Program
+internal class Program
 {
     static int Main(string[] args)
     {
@@ -25,10 +25,15 @@ class Program
                 return ConvertBatch(args[1..]);
             case "log":
                 return ShowLog();
-            case "about" or "--version" or "-v":
+            case "about":
+            case "version":
+            case "--version":
+            case "-v":
                 ShowAboutInfo();
                 return 0;
-            case "help" or "--help" or "-h":
+            case "help":
+            case "--help":
+            case "-h":
                 ShowHelpInfo();
                 return 0;
             default:
@@ -38,32 +43,32 @@ class Program
         }
     }
 
-    static int ShowImageInfo(string[] args)
+    private static int ShowImageInfo(string[] args)
     {
         return 0;
     }
 
-    static int ConvertImage(string[] args)
+    private static int ConvertImage(string[] args)
     {
         return 0;
     }
 
-    static int ConvertBatch(string[] args)
+    private static int ConvertBatch(string[] args)
     {
         return 0;
     }
 
-    static int ShowLog()
+    private static int ShowLog()
     {
         return 0;
     }
 
-    static void ShowAboutInfo()
+    private static void ShowAboutInfo()
     {
         var assembly = Assembly.GetExecutingAssembly();
         var version = assembly.GetName().Version?.ToString(3) ?? "???";
         var copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? "";
-        
+
         Console.WriteLine($"TuxDDS CLI v{version}");
         Console.WriteLine(copyright);
         Console.WriteLine("Licensed under the MIT License.");
@@ -75,7 +80,7 @@ class Program
         // If there is a second argument specifying which command needs to be helped with then show help for that one
     }
 
-    static void ShowInvalidCommand(string commandArgument)
+    private static void ShowInvalidCommand(string commandArgument)
     {
         if (string.IsNullOrWhiteSpace(commandArgument))
         {
