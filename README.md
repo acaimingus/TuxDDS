@@ -3,7 +3,6 @@
 ## TODO
 
 - Add DDS export in another format
-- Add CLI version
 - Add a thumbnailer
 - Add about dialog
 - Add unit testing
