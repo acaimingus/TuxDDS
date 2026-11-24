@@ -6,7 +6,7 @@ public class TuxLogger : ILogger
 {
     // Path for the log file of the application
     public static readonly string LogFilePath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create),
         "TuxDds",
         "TuxDds.log");
 
