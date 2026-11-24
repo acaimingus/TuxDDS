@@ -10,6 +10,48 @@
 - Adjust code to styleguide
 - Create README
 
+## CLI Usage
+
+```bash
+tuxdds <command> [options]
+```
+
+### Commands
+
+| Command | Description |
+| --- | --- |
+| `info <file.dds>` | Display metadata (dimensions, format, bits per pixel/color) of a DDS file |
+| `convert [options]` | Convert a single DDS file to PNG or JPG |
+| `batch [options]` | Batch convert DDS files inside a directory |
+| `log` | Print the TuxDDS log file |
+| `about`, `version`, `-v`, `--version` | Show version, copyright, and license information |
+| `help [command]`, `-h`, `--help` | Show general help or detailed options for a command |
+
+### Single Image Conversion (`convert`)
+
+```bash
+tuxdds convert -i <input.dds> -o <output> [-f png|jpg]
+```
+
+- `-i`, `--input <file.dds>`: Input DDS file path (required).
+- `-o`, `--output <path>`: Output file path or target directory (required).
+- `-f`, `--format <png|jpg>`: Target image format (`png` or `jpg`/`jpeg`). Optional — inferred from the output file extension if omitted, defaulting to `png`.
+
+### Batch Conversion (`batch`)
+
+```bash
+tuxdds batch -i <input-dir> -o <output-dir> [-f png|jpg] [-r] [-k] [-a <suffix> | -n <name> | --keep-name]
+```
+
+- `-i`, `--input <dir>`: Input directory containing DDS files (required).
+- `-o`, `--output <dir>`: Target output directory (required, created automatically if needed).
+- `-f`, `--format <png|jpg>`: Target image format (default: `png`).
+- `-r`, `--recursive`: Search subdirectories recursively.
+- `-k`, `--keep-structure`, `--keep-folders`: Preserve the relative subdirectory structure in the output folder.
+- `--keep-name`: Keep original file names (default).
+- `-a`, `--append <suffix>`: Append `-<suffix>` to exported file names (`<filename>-<suffix>.<ext>`).
+- `-n`, `--rename`, `--batch-rename <name>`: Rename exported files sequentially (`<name>-1.<ext>`, `<name>-2.<ext>`, ...).
+
 ## Supported DDS Formats
 
 These file formats have been tested and work as expected.

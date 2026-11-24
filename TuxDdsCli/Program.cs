@@ -47,8 +47,7 @@ internal class Program
             case "help":
             case "--help":
             case "-h":
-                ShowHelpInfo();
-                return 0;
+                return ShowHelpInfo(args[1..]);
             default:
                 // Show invalid command and then show help
                 ShowInvalidCommand(args[0]);
@@ -58,6 +57,11 @@ internal class Program
 
     private static int ShowImageInfo(string[] args)
     {
+        if (args.Length > 0 && args[0].ToLowerInvariant() is "-h" or "--help")
+        {
+            return ShowHelpInfo(["info"]);
+        }
+
         if (args.Length <= 0 || string.IsNullOrWhiteSpace(args[0]))
         {
             _logger?.LogError("No file path specified for the 'info' command.");
@@ -111,6 +115,10 @@ internal class Program
         {
             switch (args[i].ToLowerInvariant())
             {
+                case "-h":
+                case "--help":
+                    return ShowHelpInfo(["convert"]);
+
                 case "-i":
                 case "--input":
                     if (inputPath != null)
@@ -319,6 +327,10 @@ internal class Program
         {
             switch (args[i].ToLowerInvariant())
             {
+                case "-h":
+                case "--help":
+                    return ShowHelpInfo(["batch"]);
+
                 case "-i":
                 case "--input":
                     if (inputFolder != null)
@@ -575,10 +587,101 @@ internal class Program
         _logger?.LogInformation("Displayed about information for TuxDDS CLI v{Version}.", version);
     }
 
-    static void ShowHelpInfo()
+    private static int ShowHelpInfo(string[]? args = null)
     {
-        // Show available commands and give brief explanations
-        // If there is a second argument specifying which command needs to be helped with then show help for that one
+        if (args is { Length: > 0 } && !string.IsNullOrWhiteSpace(args[0]))
+        {
+            var topic = args[0].ToLowerInvariant();
+            switch (topic)
+            {
+                case "info":
+                    Console.WriteLine("Usage: tuxdds info <file.dds>");
+                    Console.WriteLine();
+                    Console.WriteLine("Displays metadata (dimensions, format, bits per pixel/color) for a DDS image.");
+                    _logger?.LogInformation("Displayed help information for command 'info'.");
+                    return 0;
+
+                case "convert":
+                    Console.WriteLine("Usage: tuxdds convert -i <input.dds> -o <output> [-f png|jpg]");
+                    Console.WriteLine();
+                    Console.WriteLine("Converts a single DDS image to PNG or JPG.");
+                    Console.WriteLine();
+                    Console.WriteLine("Options:");
+                    Console.WriteLine("  -i, --input <file.dds>   Path to the input DDS file (required)");
+                    Console.WriteLine("  -o, --output <path>      Output file path or target directory (required)");
+                    Console.WriteLine("  -f, --format <png|jpg>   Output format (inferred from extension if omitted, default: png)");
+                    Console.WriteLine("  -h, --help               Show help for this command");
+                    _logger?.LogInformation("Displayed help information for command 'convert'.");
+                    return 0;
+
+                case "batch":
+                    Console.WriteLine(
+                        "Usage: tuxdds batch -i <input-dir> -o <output-dir> [-f png|jpg] [-r] [-k] [-a <suffix> | -n <name> | --keep-name]");
+                    Console.WriteLine();
+                    Console.WriteLine("Converts all DDS images inside a folder.");
+                    Console.WriteLine();
+                    Console.WriteLine("Options:");
+                    Console.WriteLine("  -i, --input <dir>                   Input folder containing DDS files (required)");
+                    Console.WriteLine("  -o, --output <dir>                  Target output folder (required)");
+                    Console.WriteLine("  -f, --format <png|jpg>              Output format (default: png)");
+                    Console.WriteLine("  -r, --recursive                     Search subdirectories recursively");
+                    Console.WriteLine("  -k, --keep-structure, --keep-folders Preserve relative folder structure in output");
+                    Console.WriteLine("      --keep-name                     Keep original file names (default)");
+                    Console.WriteLine("  -a, --append <suffix>               Append '-<suffix>' to output file names");
+                    Console.WriteLine("  -n, --rename, --batch-rename <name> Rename files sequentially ('<name>-1', '<name>-2', ...)");
+                    Console.WriteLine("  -h, --help                          Show help for this command");
+                    _logger?.LogInformation("Displayed help information for command 'batch'.");
+                    return 0;
+
+                case "log":
+                    Console.WriteLine("Usage: tuxdds log");
+                    Console.WriteLine();
+                    Console.WriteLine("Prints the contents of the TuxDDS application log file.");
+                    _logger?.LogInformation("Displayed help information for command 'log'.");
+                    return 0;
+
+                case "about":
+                case "version":
+                    Console.WriteLine("Usage: tuxdds about | version | -v | --version");
+                    Console.WriteLine();
+                    Console.WriteLine("Displays version, copyright, and license information.");
+                    _logger?.LogInformation("Displayed help information for command '{Topic}'.", topic);
+                    return 0;
+
+                case "help":
+                    Console.WriteLine("Usage: tuxdds help [command]");
+                    Console.WriteLine();
+                    Console.WriteLine("Displays general help or detailed help for a specific command.");
+                    _logger?.LogInformation("Displayed help information for command 'help'.");
+                    return 0;
+
+                default:
+                    _logger?.LogError("Unknown help topic requested: '{Topic}'.", args[0]);
+                    Console.WriteLine($"Unknown command '{args[0]}'.");
+                    Console.WriteLine();
+                    break;
+            }
+        }
+
+        Console.WriteLine("Usage: tuxdds <command> [options]");
+        Console.WriteLine();
+        Console.WriteLine("Commands:");
+        Console.WriteLine("  info <file.dds>        Display metadata about a DDS image");
+        Console.WriteLine("  convert [options]      Convert a single DDS image to PNG or JPG");
+        Console.WriteLine("  batch [options]        Batch convert DDS images in a directory");
+        Console.WriteLine("  log                    Display the application log");
+        Console.WriteLine("  about, version, -v     Show version and license information");
+        Console.WriteLine("  help [command], -h     Show general help or help for a command");
+        Console.WriteLine();
+        Console.WriteLine("Run 'tuxdds help <command>' for detailed options (e.g. 'tuxdds help convert').");
+
+        if (args is { Length: > 0 } && !string.IsNullOrWhiteSpace(args[0]))
+        {
+            return 1;
+        }
+
+        _logger?.LogInformation("Displayed general help information.");
+        return 0;
     }
 
     private static void ShowInvalidCommand(string commandArgument)
