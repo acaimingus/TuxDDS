@@ -33,6 +33,12 @@ However C++ does not support static reflection by default, so magic-enum must be
 ./vcpkg install magic-enum:x64-linux
 ```
 
+## Install GoogleTest (for C++ unit tests)
+
+```bash
+./vcpkg install gtest:x64-linux
+```
+
 ## Change into the TuxDDS DirectXWrapper directory
 
 ```bash
@@ -44,6 +50,12 @@ cd ../TuxDDS/TuxDdsLib/DirectXTexWrapper
 ```bash
 cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$HOME/source/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux
 cmake --build build
+```
+
+## Run C++ Unit Tests
+
+```bash
+ctest --test-dir build --output-on-failure
 ```
 
 ## Copy the build output to the lib folder of the root project directory

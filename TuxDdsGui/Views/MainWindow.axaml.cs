@@ -61,7 +61,7 @@ public partial class MainWindow : Window
     /// Callback method for setting the window title, used for displaying the currently open image in the title bar
     /// </summary>
     /// <param name="title">Title to set for the window</param>
-    private void SetWindowTitle(string title)
+    internal void SetWindowTitle(string title)
     {
         Title = $"TuxDDS - {title}";
     }
@@ -70,7 +70,7 @@ public partial class MainWindow : Window
     /// Callback method for setting status messages from the controller.
     /// </summary>
     /// <param name="message">Status message to be displayed</param>
-    private void UpdateApplicationStatus(string message)
+    internal void UpdateApplicationStatus(string message)
     {
         Avalonia.Threading.Dispatcher.UIThread.Post(() => SbApplicationStatus.Text = message);
     }
@@ -79,7 +79,7 @@ public partial class MainWindow : Window
     /// Callback method for displaying the image from the controller.
     /// </summary>
     /// <param name="writeableBitmap">Bitmap to be displayed</param>
-    private void DisplayDdsImage(WriteableBitmap writeableBitmap)
+    internal void DisplayDdsImage(WriteableBitmap writeableBitmap)
     {
         ImgDdsTexture.Source = writeableBitmap;
         ResetZoomAndScroll();

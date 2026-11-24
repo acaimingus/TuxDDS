@@ -10,7 +10,7 @@ internal class Program
 {
     private static ILogger<Program>? _logger;
 
-    static int Main(string[] args)
+    internal static int Main(string[] args)
     {
         // Create the logger
         using var loggerFactory = LoggerFactory.Create(builder =>

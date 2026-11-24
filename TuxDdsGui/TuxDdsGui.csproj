@@ -31,6 +31,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <InternalsVisibleTo Include="TuxDdsTests" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\TuxDdsLib\TuxDdsLib.csproj" />
     </ItemGroup>
 </Project>

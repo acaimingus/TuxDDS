@@ -6,11 +6,12 @@
  * To prevent name mangling, missing dependencies or version mismatches DirectXTex has a wrapper library, which is in this file.
  */
 
+#include "DirectXTexWrapper.hpp"
+
 #include <DirectXTex.h>
+#include <cstring>
 #include <string>
 #include <magic_enum/magic_enum.hpp>
-
-#define EXPORT __attribute__((visibility("default")))
 
 extern "C" {
 /// Wrapper method for extracting all the needed information out of a DDS image using DirectXTex

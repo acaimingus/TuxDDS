@@ -5,7 +5,6 @@
 - Add DDS export in another format
 - Add a thumbnailer
 - Add about dialog
-- Add unit testing
 - Adjust code to styleguide
 - Create README
 
@@ -50,6 +49,22 @@ tuxdds batch -i <input-dir> -o <output-dir> [-f png|jpg] [-r] [-k] [-a <suffix> 
 - `--keep-name`: Keep original file names (default).
 - `-a`, `--append <suffix>`: Append `-<suffix>` to exported file names (`<filename>-<suffix>.<ext>`).
 - `-n`, `--rename`, `--batch-rename <name>`: Rename exported files sequentially (`<name>-1.<ext>`, `<name>-2.<ext>`, ...).
+
+## Running Unit Tests
+
+Run all .NET unit tests (`TuxDdsLib`, `TuxDdsCli`, and headless `TuxDdsGui` tests):
+
+```bash
+dotnet test TuxDDS.sln
+```
+
+Build and run the C++ `DirectXTexWrapper` unit tests (requires `gtest` installed via `vcpkg`):
+
+```bash
+cmake -B TuxDdsLib/DirectXTexWrapper/build -S TuxDdsLib/DirectXTexWrapper -DCMAKE_TOOLCHAIN_FILE=$HOME/source/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux
+cmake --build TuxDdsLib/DirectXTexWrapper/build
+ctest --test-dir TuxDdsLib/DirectXTexWrapper/build --output-on-failure
+```
 
 ## Supported DDS Formats
 
