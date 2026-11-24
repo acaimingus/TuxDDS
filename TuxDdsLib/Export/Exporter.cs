@@ -18,7 +18,8 @@ public static class Exporter
     /// <param name="imageWidth">Width of the given image</param>
     /// <param name="imageHeight">Height of the given image</param>
     /// <param name="logger">Logger for relaying error messages</param>
-    public static void ExportToPng(string outputFilePath, byte[] imageData, int imageWidth, int imageHeight,
+    /// <returns>True if the export succeeded, otherwise false</returns>
+    public static bool ExportToPng(string outputFilePath, byte[] imageData, int imageWidth, int imageHeight,
         ILogger? logger = null)
     {
         try
@@ -29,24 +30,27 @@ public static class Exporter
 
             writer.WritePng(imageData, imageWidth, imageHeight, ColorComponents.RedGreenBlueAlpha, stream);
             logger?.LogInformation("Export to {OutputFilePath} as .PNG was successful!", outputFilePath);
+            return true;
         }
         catch (Exception exception)
         {
             // Update the status message and return
             logger?.LogError("Exporting the image failed: {ExceptionMessage}", exception.Message);
+            return false;
         }
     }
 
     /// <summary>
     /// Method for exporting a JPG image from the DDS image data, always exports the image at 100% quality.
     /// </summary>
-    /// <param name="outputFilePath">File path under which to save the PNG image</param>
+    /// <param name="outputFilePath">File path under which to save the JPG image</param>
     /// <param name="imageData">The given image data, always the preview data from the UI to make sure the pixel formats
     /// are correct (R8G8B8A8)</param>
     /// <param name="imageWidth">Width of the given image</param>
     /// <param name="imageHeight">Height of the given image</param>
     /// <param name="logger">Logger for relaying error messages</param>
-    public static void ExportToJpg(string outputFilePath, byte[] imageData, int imageWidth, int imageHeight,
+    /// <returns>True if the export succeeded, otherwise false</returns>
+    public static bool ExportToJpg(string outputFilePath, byte[] imageData, int imageWidth, int imageHeight,
         ILogger? logger = null)
     {
         // This method could be reduced by the DRY-principle, but I am not going to so there won't be any dependencies
@@ -61,11 +65,13 @@ public static class Exporter
             // Use 100% quality always
             writer.WriteJpg(imageData, imageWidth, imageHeight, ColorComponents.RedGreenBlueAlpha, stream, 100);
             logger?.LogInformation("Export to {OutputFilePath} as .JPG was successful!", outputFilePath);
+            return true;
         }
         catch (Exception exception)
         {
             // Update the status message and return
             logger?.LogError("Exporting the image failed: {ExceptionMessage}", exception.Message);
+            return false;
         }
     }
 
@@ -74,7 +80,8 @@ public static class Exporter
     /// </summary>
     /// <param name="options">Configuration options for the batch export</param>
     /// <param name="logger">Logger for relaying status and error messages</param>
-    public static void BatchExport(BatchExportOptions options, ILogger? logger = null)
+    /// <returns>A <see cref="BatchExportResult"/> summarizing processed, succeeded, and failed files</returns>
+    public static BatchExportResult BatchExport(BatchExportOptions options, ILogger? logger = null)
     {
         // Search the input directory for DDS files
         var enumerationOptions = new EnumerationOptions
@@ -84,8 +91,15 @@ public static class Exporter
         };
         var ddsFiles = Directory.GetFiles(options.InputFolder, "*.dds", enumerationOptions);
 
-        // Counter for the batch renaming strategy
+        if (ddsFiles.Length > 0 && !options.KeepFolderStructure)
+        {
+            Directory.CreateDirectory(options.OutputFolder);
+        }
+
+        // Counters for batch renaming and export results
         var batchRenameIndex = 1;
+        var succeededCount = 0;
+        var failedCount = 0;
 
         foreach (var ddsFile in ddsFiles)
         {
@@ -144,25 +158,50 @@ public static class Exporter
                 }
 
                 // Do the actual export
+                bool exported;
                 switch (options.OutputFormat)
                 {
                     case ExportFormats.PNG:
-                        ExportToPng(outputFilePath, ddsTexture.PreviewImageData,
+                        exported = ExportToPng(outputFilePath, ddsTexture.PreviewImageData,
                             ddsTexture.Width, ddsTexture.Height, logger);
                         break;
                     case ExportFormats.JPG:
-                        ExportToJpg(outputFilePath, ddsTexture.PreviewImageData,
+                        exported = ExportToJpg(outputFilePath, ddsTexture.PreviewImageData,
                             ddsTexture.Width, ddsTexture.Height, logger);
                         break;
                     default:
                         logger?.LogError("Selected invalid export format: {OutputFormat}", options.OutputFormat);
-                        return;
+                        return new BatchExportResult(ddsFiles.Length, succeededCount, ddsFiles.Length - succeededCount);
                 }
+
+                if (exported)
+                {
+                    succeededCount++;
+                }
+                else
+                {
+                    failedCount++;
+                }
+            }
+            else
+            {
+                failedCount++;
             }
         }
 
-        logger?.LogInformation(
-            "Finished the batch conversion of {FileCount} files in {InputFolder} successfully. Check the log for details.",
-            ddsFiles.Length, options.InputFolder);
+        if (failedCount == 0)
+        {
+            logger?.LogInformation(
+                "Finished the batch conversion of {FileCount} files in {InputFolder} successfully. Check the log for details.",
+                ddsFiles.Length, options.InputFolder);
+        }
+        else
+        {
+            logger?.LogWarning(
+                "Finished the batch conversion in {InputFolder} with errors: {SucceededCount}/{FileCount} succeeded, {FailedCount} failed. Check the log for details.",
+                options.InputFolder, succeededCount, ddsFiles.Length, failedCount);
+        }
+
+        return new BatchExportResult(ddsFiles.Length, succeededCount, failedCount);
     }
 }
